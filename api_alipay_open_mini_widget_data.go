@@ -58,6 +58,10 @@ func (r *AlipayOpenMiniWidgetDataAPIService) AlipayOpenMiniWidgetDataSync(ctx co
 //
 //	@return AlipayOpenMiniWidgetDataSyncResponseModel
 func (a *AlipayOpenMiniWidgetDataAPIService) AlipayOpenMiniWidgetDataSyncExecute(r ApiAlipayOpenMiniWidgetDataSyncRequest) (*AlipayOpenMiniWidgetDataSyncResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -156,8 +160,6 @@ func (a *AlipayOpenMiniWidgetDataAPIService) AlipayOpenMiniWidgetDataSyncExecute
 func (a *AlipayOpenMiniWidgetDataAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
-	privateKey := a.client.cfg.PrivateKey
-
 	nonce := generateUUID()
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 
@@ -192,7 +194,7 @@ func (a *AlipayOpenMiniWidgetDataAPIService) signRequest(req *http.Request) erro
 		content += appAuthToken + "\n"
 	}
 
-	signature, err := signWithRSA(content, privateKey)
+	signature, err := signWithRSA(content, a.client.cfg.privateKey)
 	if err != nil {
 		return err
 	}
@@ -210,7 +212,5 @@ func (a *AlipayOpenMiniWidgetDataAPIService) verifyResponse(resp *http.Response,
 		nonce + "\n" +
 		string(body) + "\n"
 
-	publicKey := a.client.cfg.PublicKey
-
-	return verifyWithRSA(content, sign, publicKey)
+	return verifyWithRSA(content, sign, a.client.cfg.publicKey)
 }

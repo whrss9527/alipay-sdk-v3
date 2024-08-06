@@ -58,6 +58,10 @@ func (r *AlipayTradeBatchAPIService) AlipayTradeBatchSettle(ctx context.Context)
 //
 //	@return AlipayTradeBatchSettleResponseModel
 func (a *AlipayTradeBatchAPIService) AlipayTradeBatchSettleExecute(r ApiAlipayTradeBatchSettleRequest) (*AlipayTradeBatchSettleResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -187,6 +191,10 @@ func (r *AlipayTradeBatchAPIService) AlipayTradeBatchTransfer(ctx context.Contex
 //
 //	@return AlipayTradeBatchTransferResponseModel
 func (a *AlipayTradeBatchAPIService) AlipayTradeBatchTransferExecute(r ApiAlipayTradeBatchTransferRequest) (*AlipayTradeBatchTransferResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -285,8 +293,6 @@ func (a *AlipayTradeBatchAPIService) AlipayTradeBatchTransferExecute(r ApiAlipay
 func (a *AlipayTradeBatchAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
-	privateKey := a.client.cfg.PrivateKey
-
 	nonce := generateUUID()
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 
@@ -321,7 +327,7 @@ func (a *AlipayTradeBatchAPIService) signRequest(req *http.Request) error {
 		content += appAuthToken + "\n"
 	}
 
-	signature, err := signWithRSA(content, privateKey)
+	signature, err := signWithRSA(content, a.client.cfg.privateKey)
 	if err != nil {
 		return err
 	}
@@ -339,7 +345,5 @@ func (a *AlipayTradeBatchAPIService) verifyResponse(resp *http.Response, body []
 		nonce + "\n" +
 		string(body) + "\n"
 
-	publicKey := a.client.cfg.PublicKey
-
-	return verifyWithRSA(content, sign, publicKey)
+	return verifyWithRSA(content, sign, a.client.cfg.publicKey)
 }

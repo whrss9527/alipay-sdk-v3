@@ -58,6 +58,10 @@ func (r *AlipayEbppPdeductSignAPIService) AlipayEbppPdeductSignAdd(ctx context.C
 //
 //	@return AlipayEbppPdeductSignAddResponseModel
 func (a *AlipayEbppPdeductSignAPIService) AlipayEbppPdeductSignAddExecute(r ApiAlipayEbppPdeductSignAddRequest) (*AlipayEbppPdeductSignAddResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -187,6 +191,10 @@ func (r *AlipayEbppPdeductSignAPIService) AlipayEbppPdeductSignCancel(ctx contex
 //
 //	@return AlipayEbppPdeductSignCancelResponseModel
 func (a *AlipayEbppPdeductSignAPIService) AlipayEbppPdeductSignCancelExecute(r ApiAlipayEbppPdeductSignCancelRequest) (*AlipayEbppPdeductSignCancelResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -359,6 +367,10 @@ func (r *AlipayEbppPdeductSignAPIService) AlipayEbppPdeductSignQuery(ctx context
 //
 //	@return AlipayEbppPdeductSignQueryResponseModel
 func (a *AlipayEbppPdeductSignAPIService) AlipayEbppPdeductSignQueryExecute(r ApiAlipayEbppPdeductSignQueryRequest) (*AlipayEbppPdeductSignQueryResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -508,6 +520,10 @@ func (r *AlipayEbppPdeductSignAPIService) AlipayEbppPdeductSignValidate(ctx cont
 //
 //	@return map[string]interface{}
 func (a *AlipayEbppPdeductSignAPIService) AlipayEbppPdeductSignValidateExecute(r ApiAlipayEbppPdeductSignValidateRequest) (map[string]interface{}, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -606,8 +622,6 @@ func (a *AlipayEbppPdeductSignAPIService) AlipayEbppPdeductSignValidateExecute(r
 func (a *AlipayEbppPdeductSignAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
-	privateKey := a.client.cfg.PrivateKey
-
 	nonce := generateUUID()
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 
@@ -642,7 +656,7 @@ func (a *AlipayEbppPdeductSignAPIService) signRequest(req *http.Request) error {
 		content += appAuthToken + "\n"
 	}
 
-	signature, err := signWithRSA(content, privateKey)
+	signature, err := signWithRSA(content, a.client.cfg.privateKey)
 	if err != nil {
 		return err
 	}
@@ -660,7 +674,5 @@ func (a *AlipayEbppPdeductSignAPIService) verifyResponse(resp *http.Response, bo
 		nonce + "\n" +
 		string(body) + "\n"
 
-	publicKey := a.client.cfg.PublicKey
-
-	return verifyWithRSA(content, sign, publicKey)
+	return verifyWithRSA(content, sign, a.client.cfg.publicKey)
 }

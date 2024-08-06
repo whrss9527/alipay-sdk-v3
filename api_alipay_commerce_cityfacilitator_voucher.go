@@ -21,34 +21,34 @@ import (
 	"time"
 )
 
-// ZhimaCreditPeZmgoSettleAPIService ZhimaCreditPeZmgoSettleAPI service
-type ZhimaCreditPeZmgoSettleAPIService service
+// AlipayCommerceCityfacilitatorVoucherAPIService AlipayCommerceCityfacilitatorVoucherAPI service
+type AlipayCommerceCityfacilitatorVoucherAPIService service
 
-type ApiZhimaCreditPeZmgoSettleApplyRequest struct {
-	ctx                               context.Context
-	ApiService                        *ZhimaCreditPeZmgoSettleAPIService
-	zhimaCreditPeZmgoSettleApplyModel *ZhimaCreditPeZmgoSettleApplyModel
+type ApiAlipayCommerceCityfacilitatorVoucherBatchqueryRequest struct {
+	ctx                                                 context.Context
+	ApiService                                          *AlipayCommerceCityfacilitatorVoucherAPIService
+	alipayCommerceCityfacilitatorVoucherBatchqueryModel *AlipayCommerceCityfacilitatorVoucherBatchqueryModel
 }
 
-func (r ApiZhimaCreditPeZmgoSettleApplyRequest) ZhimaCreditPeZmgoSettleApplyModel(zhimaCreditPeZmgoSettleApplyModel ZhimaCreditPeZmgoSettleApplyModel) ApiZhimaCreditPeZmgoSettleApplyRequest {
-	r.zhimaCreditPeZmgoSettleApplyModel = &zhimaCreditPeZmgoSettleApplyModel
+func (r ApiAlipayCommerceCityfacilitatorVoucherBatchqueryRequest) AlipayCommerceCityfacilitatorVoucherBatchqueryModel(alipayCommerceCityfacilitatorVoucherBatchqueryModel AlipayCommerceCityfacilitatorVoucherBatchqueryModel) ApiAlipayCommerceCityfacilitatorVoucherBatchqueryRequest {
+	r.alipayCommerceCityfacilitatorVoucherBatchqueryModel = &alipayCommerceCityfacilitatorVoucherBatchqueryModel
 	return r
 }
 
-func (r ApiZhimaCreditPeZmgoSettleApplyRequest) Execute() (*ZhimaCreditPeZmgoSettleApplyResponseModel, *http.Response, error) {
-	return r.ApiService.ZhimaCreditPeZmgoSettleApplyExecute(r)
+func (r ApiAlipayCommerceCityfacilitatorVoucherBatchqueryRequest) Execute() (*AlipayCommerceCityfacilitatorVoucherBatchqueryResponseModel, *http.Response, error) {
+	return r.ApiService.AlipayCommerceCityfacilitatorVoucherBatchqueryExecute(r)
 }
 
 /*
-ZhimaCreditPeZmgoSettleApply 芝麻GO结算申请
+AlipayCommerceCityfacilitatorVoucherBatchquery 地铁购票订单批量查询
 
-用户已经开通芝麻GO后，商户通过此接口解冻转支付用户冻结金额。传入金额必须小于等于冻结金额
+商户APP调该接口批量查询订单状态
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiZhimaCreditPeZmgoSettleApplyRequest
+	@return ApiAlipayCommerceCityfacilitatorVoucherBatchqueryRequest
 */
-func (r *ZhimaCreditPeZmgoSettleAPIService) ZhimaCreditPeZmgoSettleApply(ctx context.Context) ApiZhimaCreditPeZmgoSettleApplyRequest {
-	return ApiZhimaCreditPeZmgoSettleApplyRequest{
+func (r *AlipayCommerceCityfacilitatorVoucherAPIService) AlipayCommerceCityfacilitatorVoucherBatchquery(ctx context.Context) ApiAlipayCommerceCityfacilitatorVoucherBatchqueryRequest {
+	return ApiAlipayCommerceCityfacilitatorVoucherBatchqueryRequest{
 		ApiService: r,
 		ctx:        ctx,
 	}
@@ -56,8 +56,8 @@ func (r *ZhimaCreditPeZmgoSettleAPIService) ZhimaCreditPeZmgoSettleApply(ctx con
 
 // Execute executes the request
 //
-//	@return ZhimaCreditPeZmgoSettleApplyResponseModel
-func (a *ZhimaCreditPeZmgoSettleAPIService) ZhimaCreditPeZmgoSettleApplyExecute(r ApiZhimaCreditPeZmgoSettleApplyRequest) (*ZhimaCreditPeZmgoSettleApplyResponseModel, *http.Response, error) {
+//	@return AlipayCommerceCityfacilitatorVoucherBatchqueryResponseModel
+func (a *AlipayCommerceCityfacilitatorVoucherAPIService) AlipayCommerceCityfacilitatorVoucherBatchqueryExecute(r ApiAlipayCommerceCityfacilitatorVoucherBatchqueryRequest) (*AlipayCommerceCityfacilitatorVoucherBatchqueryResponseModel, *http.Response, error) {
 	err := a.client.prepareConfig()
 	if err != nil {
 		return nil, nil, &GenericOpenAPIError{error: err.Error()}
@@ -66,15 +66,15 @@ func (a *ZhimaCreditPeZmgoSettleAPIService) ZhimaCreditPeZmgoSettleApplyExecute(
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue *ZhimaCreditPeZmgoSettleApplyResponseModel
+		localVarReturnValue *AlipayCommerceCityfacilitatorVoucherBatchqueryResponseModel
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ZhimaCreditPeZmgoSettleAPIService.ZhimaCreditPeZmgoSettleApply")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AlipayCommerceCityfacilitatorVoucherAPIService.AlipayCommerceCityfacilitatorVoucherBatchquery")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/v3/zhima/credit/pe/zmgo/settle/apply"
+	localVarPath := localBasePath + "/v3/alipay/commerce/cityfacilitator/voucher/batchquery"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -98,7 +98,7 @@ func (a *ZhimaCreditPeZmgoSettleAPIService) ZhimaCreditPeZmgoSettleApplyExecute(
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.zhimaCreditPeZmgoSettleApplyModel
+	localVarPostBody = r.alipayCommerceCityfacilitatorVoucherBatchqueryModel
 
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
@@ -134,7 +134,7 @@ func (a *ZhimaCreditPeZmgoSettleAPIService) ZhimaCreditPeZmgoSettleApplyExecute(
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		var v ZhimaCreditPeZmgoSettleApplyDefaultResponse
+		var v AlipayCommerceCityfacilitatorVoucherBatchqueryDefaultResponse
 		err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 		if err != nil {
 			newErr.error = err.Error()
@@ -157,31 +157,31 @@ func (a *ZhimaCreditPeZmgoSettleAPIService) ZhimaCreditPeZmgoSettleApplyExecute(
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiZhimaCreditPeZmgoSettleRefundRequest struct {
-	ctx                                context.Context
-	ApiService                         *ZhimaCreditPeZmgoSettleAPIService
-	zhimaCreditPeZmgoSettleRefundModel *ZhimaCreditPeZmgoSettleRefundModel
+type ApiAlipayCommerceCityfacilitatorVoucherGenerateRequest struct {
+	ctx                                               context.Context
+	ApiService                                        *AlipayCommerceCityfacilitatorVoucherAPIService
+	alipayCommerceCityfacilitatorVoucherGenerateModel *AlipayCommerceCityfacilitatorVoucherGenerateModel
 }
 
-func (r ApiZhimaCreditPeZmgoSettleRefundRequest) ZhimaCreditPeZmgoSettleRefundModel(zhimaCreditPeZmgoSettleRefundModel ZhimaCreditPeZmgoSettleRefundModel) ApiZhimaCreditPeZmgoSettleRefundRequest {
-	r.zhimaCreditPeZmgoSettleRefundModel = &zhimaCreditPeZmgoSettleRefundModel
+func (r ApiAlipayCommerceCityfacilitatorVoucherGenerateRequest) AlipayCommerceCityfacilitatorVoucherGenerateModel(alipayCommerceCityfacilitatorVoucherGenerateModel AlipayCommerceCityfacilitatorVoucherGenerateModel) ApiAlipayCommerceCityfacilitatorVoucherGenerateRequest {
+	r.alipayCommerceCityfacilitatorVoucherGenerateModel = &alipayCommerceCityfacilitatorVoucherGenerateModel
 	return r
 }
 
-func (r ApiZhimaCreditPeZmgoSettleRefundRequest) Execute() (*ZhimaCreditPeZmgoSettleRefundResponseModel, *http.Response, error) {
-	return r.ApiService.ZhimaCreditPeZmgoSettleRefundExecute(r)
+func (r ApiAlipayCommerceCityfacilitatorVoucherGenerateRequest) Execute() (*AlipayCommerceCityfacilitatorVoucherGenerateResponseModel, *http.Response, error) {
+	return r.ApiService.AlipayCommerceCityfacilitatorVoucherGenerateExecute(r)
 }
 
 /*
-ZhimaCreditPeZmgoSettleRefund 芝麻GO结算退款接口
+AlipayCommerceCityfacilitatorVoucherGenerate 地铁购票核销码发码
 
-芝麻GO结算金额逆向退款接口: 对zhima.credit.pe.zmgo.settle.apply(芝麻GO结算申请接口) 产生的结算交易发起退款操作
+商户APP调快捷支付付款后，获取地铁购票的核销码
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiZhimaCreditPeZmgoSettleRefundRequest
+	@return ApiAlipayCommerceCityfacilitatorVoucherGenerateRequest
 */
-func (r *ZhimaCreditPeZmgoSettleAPIService) ZhimaCreditPeZmgoSettleRefund(ctx context.Context) ApiZhimaCreditPeZmgoSettleRefundRequest {
-	return ApiZhimaCreditPeZmgoSettleRefundRequest{
+func (r *AlipayCommerceCityfacilitatorVoucherAPIService) AlipayCommerceCityfacilitatorVoucherGenerate(ctx context.Context) ApiAlipayCommerceCityfacilitatorVoucherGenerateRequest {
+	return ApiAlipayCommerceCityfacilitatorVoucherGenerateRequest{
 		ApiService: r,
 		ctx:        ctx,
 	}
@@ -189,8 +189,8 @@ func (r *ZhimaCreditPeZmgoSettleAPIService) ZhimaCreditPeZmgoSettleRefund(ctx co
 
 // Execute executes the request
 //
-//	@return ZhimaCreditPeZmgoSettleRefundResponseModel
-func (a *ZhimaCreditPeZmgoSettleAPIService) ZhimaCreditPeZmgoSettleRefundExecute(r ApiZhimaCreditPeZmgoSettleRefundRequest) (*ZhimaCreditPeZmgoSettleRefundResponseModel, *http.Response, error) {
+//	@return AlipayCommerceCityfacilitatorVoucherGenerateResponseModel
+func (a *AlipayCommerceCityfacilitatorVoucherAPIService) AlipayCommerceCityfacilitatorVoucherGenerateExecute(r ApiAlipayCommerceCityfacilitatorVoucherGenerateRequest) (*AlipayCommerceCityfacilitatorVoucherGenerateResponseModel, *http.Response, error) {
 	err := a.client.prepareConfig()
 	if err != nil {
 		return nil, nil, &GenericOpenAPIError{error: err.Error()}
@@ -199,15 +199,15 @@ func (a *ZhimaCreditPeZmgoSettleAPIService) ZhimaCreditPeZmgoSettleRefundExecute
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue *ZhimaCreditPeZmgoSettleRefundResponseModel
+		localVarReturnValue *AlipayCommerceCityfacilitatorVoucherGenerateResponseModel
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ZhimaCreditPeZmgoSettleAPIService.ZhimaCreditPeZmgoSettleRefund")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AlipayCommerceCityfacilitatorVoucherAPIService.AlipayCommerceCityfacilitatorVoucherGenerate")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/v3/zhima/credit/pe/zmgo/settle/refund"
+	localVarPath := localBasePath + "/v3/alipay/commerce/cityfacilitator/voucher/generate"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -231,7 +231,7 @@ func (a *ZhimaCreditPeZmgoSettleAPIService) ZhimaCreditPeZmgoSettleRefundExecute
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.zhimaCreditPeZmgoSettleRefundModel
+	localVarPostBody = r.alipayCommerceCityfacilitatorVoucherGenerateModel
 
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
@@ -267,7 +267,7 @@ func (a *ZhimaCreditPeZmgoSettleAPIService) ZhimaCreditPeZmgoSettleRefundExecute
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		var v ZhimaCreditPeZmgoSettleRefundDefaultResponse
+		var v AlipayCommerceCityfacilitatorVoucherGenerateDefaultResponse
 		err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 		if err != nil {
 			newErr.error = err.Error()
@@ -290,31 +290,31 @@ func (a *ZhimaCreditPeZmgoSettleAPIService) ZhimaCreditPeZmgoSettleRefundExecute
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiZhimaCreditPeZmgoSettleUnfreezeRequest struct {
-	ctx                                  context.Context
-	ApiService                           *ZhimaCreditPeZmgoSettleAPIService
-	zhimaCreditPeZmgoSettleUnfreezeModel *ZhimaCreditPeZmgoSettleUnfreezeModel
+type ApiAlipayCommerceCityfacilitatorVoucherRefundRequest struct {
+	ctx                                             context.Context
+	ApiService                                      *AlipayCommerceCityfacilitatorVoucherAPIService
+	alipayCommerceCityfacilitatorVoucherRefundModel *AlipayCommerceCityfacilitatorVoucherRefundModel
 }
 
-func (r ApiZhimaCreditPeZmgoSettleUnfreezeRequest) ZhimaCreditPeZmgoSettleUnfreezeModel(zhimaCreditPeZmgoSettleUnfreezeModel ZhimaCreditPeZmgoSettleUnfreezeModel) ApiZhimaCreditPeZmgoSettleUnfreezeRequest {
-	r.zhimaCreditPeZmgoSettleUnfreezeModel = &zhimaCreditPeZmgoSettleUnfreezeModel
+func (r ApiAlipayCommerceCityfacilitatorVoucherRefundRequest) AlipayCommerceCityfacilitatorVoucherRefundModel(alipayCommerceCityfacilitatorVoucherRefundModel AlipayCommerceCityfacilitatorVoucherRefundModel) ApiAlipayCommerceCityfacilitatorVoucherRefundRequest {
+	r.alipayCommerceCityfacilitatorVoucherRefundModel = &alipayCommerceCityfacilitatorVoucherRefundModel
 	return r
 }
 
-func (r ApiZhimaCreditPeZmgoSettleUnfreezeRequest) Execute() (*ZhimaCreditPeZmgoSettleUnfreezeResponseModel, *http.Response, error) {
-	return r.ApiService.ZhimaCreditPeZmgoSettleUnfreezeExecute(r)
+func (r ApiAlipayCommerceCityfacilitatorVoucherRefundRequest) Execute() (map[string]interface{}, *http.Response, error) {
+	return r.ApiService.AlipayCommerceCityfacilitatorVoucherRefundExecute(r)
 }
 
 /*
-ZhimaCreditPeZmgoSettleUnfreeze 芝麻GO解冻接口
+AlipayCommerceCityfacilitatorVoucherRefund 地铁购票发码退款
 
-用户已经开通芝麻GO后，商户通过此接口解冻转支付用户冻结金额。传入金额必须小于等于冻结金额
+地铁购票，商户发码后，调该接口从中间户退款
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiZhimaCreditPeZmgoSettleUnfreezeRequest
+	@return ApiAlipayCommerceCityfacilitatorVoucherRefundRequest
 */
-func (r *ZhimaCreditPeZmgoSettleAPIService) ZhimaCreditPeZmgoSettleUnfreeze(ctx context.Context) ApiZhimaCreditPeZmgoSettleUnfreezeRequest {
-	return ApiZhimaCreditPeZmgoSettleUnfreezeRequest{
+func (r *AlipayCommerceCityfacilitatorVoucherAPIService) AlipayCommerceCityfacilitatorVoucherRefund(ctx context.Context) ApiAlipayCommerceCityfacilitatorVoucherRefundRequest {
+	return ApiAlipayCommerceCityfacilitatorVoucherRefundRequest{
 		ApiService: r,
 		ctx:        ctx,
 	}
@@ -322,25 +322,25 @@ func (r *ZhimaCreditPeZmgoSettleAPIService) ZhimaCreditPeZmgoSettleUnfreeze(ctx 
 
 // Execute executes the request
 //
-//	@return ZhimaCreditPeZmgoSettleUnfreezeResponseModel
-func (a *ZhimaCreditPeZmgoSettleAPIService) ZhimaCreditPeZmgoSettleUnfreezeExecute(r ApiZhimaCreditPeZmgoSettleUnfreezeRequest) (*ZhimaCreditPeZmgoSettleUnfreezeResponseModel, *http.Response, error) {
+//	@return map[string]interface{}
+func (a *AlipayCommerceCityfacilitatorVoucherAPIService) AlipayCommerceCityfacilitatorVoucherRefundExecute(r ApiAlipayCommerceCityfacilitatorVoucherRefundRequest) (map[string]interface{}, *http.Response, error) {
 	err := a.client.prepareConfig()
 	if err != nil {
 		return nil, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 	var (
-		localVarHTTPMethod  = http.MethodPut
+		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue *ZhimaCreditPeZmgoSettleUnfreezeResponseModel
+		localVarReturnValue map[string]interface{}
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ZhimaCreditPeZmgoSettleAPIService.ZhimaCreditPeZmgoSettleUnfreeze")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AlipayCommerceCityfacilitatorVoucherAPIService.AlipayCommerceCityfacilitatorVoucherRefund")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/v3/zhima/credit/pe/zmgo/settle/unfreeze"
+	localVarPath := localBasePath + "/v3/alipay/commerce/cityfacilitator/voucher/refund"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -364,7 +364,7 @@ func (a *ZhimaCreditPeZmgoSettleAPIService) ZhimaCreditPeZmgoSettleUnfreezeExecu
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.zhimaCreditPeZmgoSettleUnfreezeModel
+	localVarPostBody = r.alipayCommerceCityfacilitatorVoucherRefundModel
 
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
@@ -400,7 +400,7 @@ func (a *ZhimaCreditPeZmgoSettleAPIService) ZhimaCreditPeZmgoSettleUnfreezeExecu
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		var v ZhimaCreditPeZmgoSettleUnfreezeDefaultResponse
+		var v AlipayCommerceCityfacilitatorVoucherRefundDefaultResponse
 		err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 		if err != nil {
 			newErr.error = err.Error()
@@ -423,7 +423,7 @@ func (a *ZhimaCreditPeZmgoSettleAPIService) ZhimaCreditPeZmgoSettleUnfreezeExecu
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-func (a *ZhimaCreditPeZmgoSettleAPIService) signRequest(req *http.Request) error {
+func (a *AlipayCommerceCityfacilitatorVoucherAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
 	nonce := generateUUID()
@@ -469,7 +469,7 @@ func (a *ZhimaCreditPeZmgoSettleAPIService) signRequest(req *http.Request) error
 	return nil
 }
 
-func (a *ZhimaCreditPeZmgoSettleAPIService) verifyResponse(resp *http.Response, body []byte) error {
+func (a *AlipayCommerceCityfacilitatorVoucherAPIService) verifyResponse(resp *http.Response, body []byte) error {
 	timestamp := resp.Header.Get("alipay-timestamp")
 	nonce := resp.Header.Get("alipay-nonce")
 	sign := resp.Header.Get("alipay-signature")

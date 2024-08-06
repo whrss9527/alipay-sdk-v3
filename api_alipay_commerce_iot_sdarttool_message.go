@@ -59,6 +59,10 @@ func (r *AlipayCommerceIotSdarttoolMessageAPIService) AlipayCommerceIotSdarttool
 //
 //	@return AlipayCommerceIotSdarttoolMessageQueryResponseModel
 func (a *AlipayCommerceIotSdarttoolMessageAPIService) AlipayCommerceIotSdarttoolMessageQueryExecute(r ApiAlipayCommerceIotSdarttoolMessageQueryRequest) (*AlipayCommerceIotSdarttoolMessageQueryResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -190,6 +194,10 @@ func (r *AlipayCommerceIotSdarttoolMessageAPIService) AlipayCommerceIotSdarttool
 //
 //	@return AlipayCommerceIotSdarttoolMessageSendResponseModel
 func (a *AlipayCommerceIotSdarttoolMessageAPIService) AlipayCommerceIotSdarttoolMessageSendExecute(r ApiAlipayCommerceIotSdarttoolMessageSendRequest) (*AlipayCommerceIotSdarttoolMessageSendResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -288,8 +296,6 @@ func (a *AlipayCommerceIotSdarttoolMessageAPIService) AlipayCommerceIotSdarttool
 func (a *AlipayCommerceIotSdarttoolMessageAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
-	privateKey := a.client.cfg.PrivateKey
-
 	nonce := generateUUID()
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 
@@ -324,7 +330,7 @@ func (a *AlipayCommerceIotSdarttoolMessageAPIService) signRequest(req *http.Requ
 		content += appAuthToken + "\n"
 	}
 
-	signature, err := signWithRSA(content, privateKey)
+	signature, err := signWithRSA(content, a.client.cfg.privateKey)
 	if err != nil {
 		return err
 	}
@@ -342,7 +348,5 @@ func (a *AlipayCommerceIotSdarttoolMessageAPIService) verifyResponse(resp *http.
 		nonce + "\n" +
 		string(body) + "\n"
 
-	publicKey := a.client.cfg.PublicKey
-
-	return verifyWithRSA(content, sign, publicKey)
+	return verifyWithRSA(content, sign, a.client.cfg.publicKey)
 }

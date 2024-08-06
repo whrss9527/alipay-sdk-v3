@@ -58,6 +58,10 @@ func (r *AlipayOpenSpBlueseaactivityAPIService) AlipayOpenSpBlueseaactivityCreat
 //
 //	@return AlipayOpenSpBlueseaactivityCreateResponseModel
 func (a *AlipayOpenSpBlueseaactivityAPIService) AlipayOpenSpBlueseaactivityCreateExecute(r ApiAlipayOpenSpBlueseaactivityCreateRequest) (*AlipayOpenSpBlueseaactivityCreateResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -187,6 +191,10 @@ func (r *AlipayOpenSpBlueseaactivityAPIService) AlipayOpenSpBlueseaactivityModif
 //
 //	@return map[string]interface{}
 func (a *AlipayOpenSpBlueseaactivityAPIService) AlipayOpenSpBlueseaactivityModifyExecute(r ApiAlipayOpenSpBlueseaactivityModifyRequest) (map[string]interface{}, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -317,6 +325,10 @@ func (r *AlipayOpenSpBlueseaactivityAPIService) AlipayOpenSpBlueseaactivityQuery
 //
 //	@return AlipayOpenSpBlueseaactivityQueryResponseModel
 func (a *AlipayOpenSpBlueseaactivityAPIService) AlipayOpenSpBlueseaactivityQueryExecute(r ApiAlipayOpenSpBlueseaactivityQueryRequest) (*AlipayOpenSpBlueseaactivityQueryResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -417,8 +429,6 @@ func (a *AlipayOpenSpBlueseaactivityAPIService) AlipayOpenSpBlueseaactivityQuery
 func (a *AlipayOpenSpBlueseaactivityAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
-	privateKey := a.client.cfg.PrivateKey
-
 	nonce := generateUUID()
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 
@@ -453,7 +463,7 @@ func (a *AlipayOpenSpBlueseaactivityAPIService) signRequest(req *http.Request) e
 		content += appAuthToken + "\n"
 	}
 
-	signature, err := signWithRSA(content, privateKey)
+	signature, err := signWithRSA(content, a.client.cfg.privateKey)
 	if err != nil {
 		return err
 	}
@@ -471,7 +481,5 @@ func (a *AlipayOpenSpBlueseaactivityAPIService) verifyResponse(resp *http.Respon
 		nonce + "\n" +
 		string(body) + "\n"
 
-	publicKey := a.client.cfg.PublicKey
-
-	return verifyWithRSA(content, sign, publicKey)
+	return verifyWithRSA(content, sign, a.client.cfg.publicKey)
 }

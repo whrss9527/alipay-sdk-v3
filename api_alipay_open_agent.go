@@ -58,6 +58,10 @@ func (r *AlipayOpenAgentAPIService) AlipayOpenAgentCancel(ctx context.Context) A
 //
 //	@return map[string]interface{}
 func (a *AlipayOpenAgentAPIService) AlipayOpenAgentCancelExecute(r ApiAlipayOpenAgentCancelRequest) (map[string]interface{}, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -187,6 +191,10 @@ func (r *AlipayOpenAgentAPIService) AlipayOpenAgentConfirm(ctx context.Context) 
 //
 //	@return AlipayOpenAgentConfirmResponseModel
 func (a *AlipayOpenAgentAPIService) AlipayOpenAgentConfirmExecute(r ApiAlipayOpenAgentConfirmRequest) (*AlipayOpenAgentConfirmResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -316,6 +324,10 @@ func (r *AlipayOpenAgentAPIService) AlipayOpenAgentCreate(ctx context.Context) A
 //
 //	@return AlipayOpenAgentCreateResponseModel
 func (a *AlipayOpenAgentAPIService) AlipayOpenAgentCreateExecute(r ApiAlipayOpenAgentCreateRequest) (*AlipayOpenAgentCreateResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -414,8 +426,6 @@ func (a *AlipayOpenAgentAPIService) AlipayOpenAgentCreateExecute(r ApiAlipayOpen
 func (a *AlipayOpenAgentAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
-	privateKey := a.client.cfg.PrivateKey
-
 	nonce := generateUUID()
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 
@@ -450,7 +460,7 @@ func (a *AlipayOpenAgentAPIService) signRequest(req *http.Request) error {
 		content += appAuthToken + "\n"
 	}
 
-	signature, err := signWithRSA(content, privateKey)
+	signature, err := signWithRSA(content, a.client.cfg.privateKey)
 	if err != nil {
 		return err
 	}
@@ -468,7 +478,5 @@ func (a *AlipayOpenAgentAPIService) verifyResponse(resp *http.Response, body []b
 		nonce + "\n" +
 		string(body) + "\n"
 
-	publicKey := a.client.cfg.PublicKey
-
-	return verifyWithRSA(content, sign, publicKey)
+	return verifyWithRSA(content, sign, a.client.cfg.publicKey)
 }

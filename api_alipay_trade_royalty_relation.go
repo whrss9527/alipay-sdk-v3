@@ -58,6 +58,10 @@ func (r *AlipayTradeRoyaltyRelationAPIService) AlipayTradeRoyaltyRelationBatchqu
 //
 //	@return AlipayTradeRoyaltyRelationBatchqueryResponseModel
 func (a *AlipayTradeRoyaltyRelationAPIService) AlipayTradeRoyaltyRelationBatchqueryExecute(r ApiAlipayTradeRoyaltyRelationBatchqueryRequest) (*AlipayTradeRoyaltyRelationBatchqueryResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -187,6 +191,10 @@ func (r *AlipayTradeRoyaltyRelationAPIService) AlipayTradeRoyaltyRelationBind(ct
 //
 //	@return AlipayTradeRoyaltyRelationBindResponseModel
 func (a *AlipayTradeRoyaltyRelationAPIService) AlipayTradeRoyaltyRelationBindExecute(r ApiAlipayTradeRoyaltyRelationBindRequest) (*AlipayTradeRoyaltyRelationBindResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -316,6 +324,10 @@ func (r *AlipayTradeRoyaltyRelationAPIService) AlipayTradeRoyaltyRelationUnbind(
 //
 //	@return AlipayTradeRoyaltyRelationUnbindResponseModel
 func (a *AlipayTradeRoyaltyRelationAPIService) AlipayTradeRoyaltyRelationUnbindExecute(r ApiAlipayTradeRoyaltyRelationUnbindRequest) (*AlipayTradeRoyaltyRelationUnbindResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -414,8 +426,6 @@ func (a *AlipayTradeRoyaltyRelationAPIService) AlipayTradeRoyaltyRelationUnbindE
 func (a *AlipayTradeRoyaltyRelationAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
-	privateKey := a.client.cfg.PrivateKey
-
 	nonce := generateUUID()
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 
@@ -450,7 +460,7 @@ func (a *AlipayTradeRoyaltyRelationAPIService) signRequest(req *http.Request) er
 		content += appAuthToken + "\n"
 	}
 
-	signature, err := signWithRSA(content, privateKey)
+	signature, err := signWithRSA(content, a.client.cfg.privateKey)
 	if err != nil {
 		return err
 	}
@@ -468,7 +478,5 @@ func (a *AlipayTradeRoyaltyRelationAPIService) verifyResponse(resp *http.Respons
 		nonce + "\n" +
 		string(body) + "\n"
 
-	publicKey := a.client.cfg.PublicKey
-
-	return verifyWithRSA(content, sign, publicKey)
+	return verifyWithRSA(content, sign, a.client.cfg.publicKey)
 }

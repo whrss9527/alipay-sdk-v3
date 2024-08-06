@@ -58,6 +58,10 @@ func (r *AlipayFundEnterprisepayGroupAPIService) AlipayFundEnterprisepayGroupAdd
 //
 //	@return AlipayFundEnterprisepayGroupAddResponseModel
 func (a *AlipayFundEnterprisepayGroupAPIService) AlipayFundEnterprisepayGroupAddExecute(r ApiAlipayFundEnterprisepayGroupAddRequest) (*AlipayFundEnterprisepayGroupAddResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -216,6 +220,10 @@ func (r *AlipayFundEnterprisepayGroupAPIService) AlipayFundEnterprisepayGroupDel
 //
 //	@return map[string]interface{}
 func (a *AlipayFundEnterprisepayGroupAPIService) AlipayFundEnterprisepayGroupDeleteExecute(r ApiAlipayFundEnterprisepayGroupDeleteRequest) (map[string]interface{}, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodDelete
 		localVarPostBody    interface{}
@@ -359,6 +367,10 @@ func (r *AlipayFundEnterprisepayGroupAPIService) AlipayFundEnterprisepayGroupMod
 //
 //	@return map[string]interface{}
 func (a *AlipayFundEnterprisepayGroupAPIService) AlipayFundEnterprisepayGroupModifyExecute(r ApiAlipayFundEnterprisepayGroupModifyRequest) (map[string]interface{}, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -517,6 +529,10 @@ func (r *AlipayFundEnterprisepayGroupAPIService) AlipayFundEnterprisepayGroupQue
 //
 //	@return AlipayFundEnterprisepayGroupQueryResponseModel
 func (a *AlipayFundEnterprisepayGroupAPIService) AlipayFundEnterprisepayGroupQueryExecute(r ApiAlipayFundEnterprisepayGroupQueryRequest) (*AlipayFundEnterprisepayGroupQueryResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -629,8 +645,6 @@ func (a *AlipayFundEnterprisepayGroupAPIService) AlipayFundEnterprisepayGroupQue
 func (a *AlipayFundEnterprisepayGroupAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
-	privateKey := a.client.cfg.PrivateKey
-
 	nonce := generateUUID()
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 
@@ -665,7 +679,7 @@ func (a *AlipayFundEnterprisepayGroupAPIService) signRequest(req *http.Request) 
 		content += appAuthToken + "\n"
 	}
 
-	signature, err := signWithRSA(content, privateKey)
+	signature, err := signWithRSA(content, a.client.cfg.privateKey)
 	if err != nil {
 		return err
 	}
@@ -683,7 +697,5 @@ func (a *AlipayFundEnterprisepayGroupAPIService) verifyResponse(resp *http.Respo
 		nonce + "\n" +
 		string(body) + "\n"
 
-	publicKey := a.client.cfg.PublicKey
-
-	return verifyWithRSA(content, sign, publicKey)
+	return verifyWithRSA(content, sign, a.client.cfg.publicKey)
 }

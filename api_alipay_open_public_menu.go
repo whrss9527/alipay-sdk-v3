@@ -52,6 +52,10 @@ func (r *AlipayOpenPublicMenuAPIService) AlipayOpenPublicMenuBatchquery(ctx cont
 //
 //	@return AlipayOpenPublicMenuBatchqueryResponseModel
 func (a *AlipayOpenPublicMenuAPIService) AlipayOpenPublicMenuBatchqueryExecute(r ApiAlipayOpenPublicMenuBatchqueryRequest) (*AlipayOpenPublicMenuBatchqueryResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -179,6 +183,10 @@ func (r *AlipayOpenPublicMenuAPIService) AlipayOpenPublicMenuCreate(ctx context.
 //
 //	@return AlipayOpenPublicMenuCreateResponseModel
 func (a *AlipayOpenPublicMenuAPIService) AlipayOpenPublicMenuCreateExecute(r ApiAlipayOpenPublicMenuCreateRequest) (*AlipayOpenPublicMenuCreateResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -308,6 +316,10 @@ func (r *AlipayOpenPublicMenuAPIService) AlipayOpenPublicMenuModify(ctx context.
 //
 //	@return map[string]interface{}
 func (a *AlipayOpenPublicMenuAPIService) AlipayOpenPublicMenuModifyExecute(r ApiAlipayOpenPublicMenuModifyRequest) (map[string]interface{}, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -431,6 +443,10 @@ func (r *AlipayOpenPublicMenuAPIService) AlipayOpenPublicMenuQuery(ctx context.C
 //
 //	@return AlipayOpenPublicMenuQueryResponseModel
 func (a *AlipayOpenPublicMenuAPIService) AlipayOpenPublicMenuQueryExecute(r ApiAlipayOpenPublicMenuQueryRequest) (*AlipayOpenPublicMenuQueryResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -527,8 +543,6 @@ func (a *AlipayOpenPublicMenuAPIService) AlipayOpenPublicMenuQueryExecute(r ApiA
 func (a *AlipayOpenPublicMenuAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
-	privateKey := a.client.cfg.PrivateKey
-
 	nonce := generateUUID()
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 
@@ -563,7 +577,7 @@ func (a *AlipayOpenPublicMenuAPIService) signRequest(req *http.Request) error {
 		content += appAuthToken + "\n"
 	}
 
-	signature, err := signWithRSA(content, privateKey)
+	signature, err := signWithRSA(content, a.client.cfg.privateKey)
 	if err != nil {
 		return err
 	}
@@ -581,7 +595,5 @@ func (a *AlipayOpenPublicMenuAPIService) verifyResponse(resp *http.Response, bod
 		nonce + "\n" +
 		string(body) + "\n"
 
-	publicKey := a.client.cfg.PublicKey
-
-	return verifyWithRSA(content, sign, publicKey)
+	return verifyWithRSA(content, sign, a.client.cfg.publicKey)
 }

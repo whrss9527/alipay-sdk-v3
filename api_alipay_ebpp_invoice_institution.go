@@ -58,6 +58,10 @@ func (r *AlipayEbppInvoiceInstitutionAPIService) AlipayEbppInvoiceInstitutionCre
 //
 //	@return AlipayEbppInvoiceInstitutionCreateResponseModel
 func (a *AlipayEbppInvoiceInstitutionAPIService) AlipayEbppInvoiceInstitutionCreateExecute(r ApiAlipayEbppInvoiceInstitutionCreateRequest) (*AlipayEbppInvoiceInstitutionCreateResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -211,6 +215,10 @@ func (r *AlipayEbppInvoiceInstitutionAPIService) AlipayEbppInvoiceInstitutionDel
 //
 //	@return AlipayEbppInvoiceInstitutionDeleteResponseModel
 func (a *AlipayEbppInvoiceInstitutionAPIService) AlipayEbppInvoiceInstitutionDeleteExecute(r ApiAlipayEbppInvoiceInstitutionDeleteRequest) (*AlipayEbppInvoiceInstitutionDeleteResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodDelete
 		localVarPostBody    interface{}
@@ -351,6 +359,10 @@ func (r *AlipayEbppInvoiceInstitutionAPIService) AlipayEbppInvoiceInstitutionMod
 //
 //	@return AlipayEbppInvoiceInstitutionModifyResponseModel
 func (a *AlipayEbppInvoiceInstitutionAPIService) AlipayEbppInvoiceInstitutionModifyExecute(r ApiAlipayEbppInvoiceInstitutionModifyRequest) (*AlipayEbppInvoiceInstitutionModifyResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -449,8 +461,6 @@ func (a *AlipayEbppInvoiceInstitutionAPIService) AlipayEbppInvoiceInstitutionMod
 func (a *AlipayEbppInvoiceInstitutionAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
-	privateKey := a.client.cfg.PrivateKey
-
 	nonce := generateUUID()
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 
@@ -485,7 +495,7 @@ func (a *AlipayEbppInvoiceInstitutionAPIService) signRequest(req *http.Request) 
 		content += appAuthToken + "\n"
 	}
 
-	signature, err := signWithRSA(content, privateKey)
+	signature, err := signWithRSA(content, a.client.cfg.privateKey)
 	if err != nil {
 		return err
 	}
@@ -503,7 +513,5 @@ func (a *AlipayEbppInvoiceInstitutionAPIService) verifyResponse(resp *http.Respo
 		nonce + "\n" +
 		string(body) + "\n"
 
-	publicKey := a.client.cfg.PublicKey
-
-	return verifyWithRSA(content, sign, publicKey)
+	return verifyWithRSA(content, sign, a.client.cfg.publicKey)
 }

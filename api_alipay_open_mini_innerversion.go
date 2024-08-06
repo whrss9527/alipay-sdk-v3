@@ -58,6 +58,10 @@ func (r *AlipayOpenMiniInnerversionAPIService) AlipayOpenMiniInnerversionOnline(
 //
 //	@return map[string]interface{}
 func (a *AlipayOpenMiniInnerversionAPIService) AlipayOpenMiniInnerversionOnlineExecute(r ApiAlipayOpenMiniInnerversionOnlineRequest) (map[string]interface{}, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -187,6 +191,10 @@ func (r *AlipayOpenMiniInnerversionAPIService) AlipayOpenMiniInnerversionSync(ct
 //
 //	@return map[string]interface{}
 func (a *AlipayOpenMiniInnerversionAPIService) AlipayOpenMiniInnerversionSyncExecute(r ApiAlipayOpenMiniInnerversionSyncRequest) (map[string]interface{}, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -316,6 +324,10 @@ func (r *AlipayOpenMiniInnerversionAPIService) AlipayOpenMiniInnerversionUpgrade
 //
 //	@return map[string]interface{}
 func (a *AlipayOpenMiniInnerversionAPIService) AlipayOpenMiniInnerversionUpgradeExecute(r ApiAlipayOpenMiniInnerversionUpgradeRequest) (map[string]interface{}, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -445,6 +457,10 @@ func (r *AlipayOpenMiniInnerversionAPIService) AlipayOpenMiniInnerversionUpload(
 //
 //	@return AlipayOpenMiniInnerversionUploadResponseModel
 func (a *AlipayOpenMiniInnerversionAPIService) AlipayOpenMiniInnerversionUploadExecute(r ApiAlipayOpenMiniInnerversionUploadRequest) (*AlipayOpenMiniInnerversionUploadResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -543,8 +559,6 @@ func (a *AlipayOpenMiniInnerversionAPIService) AlipayOpenMiniInnerversionUploadE
 func (a *AlipayOpenMiniInnerversionAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
-	privateKey := a.client.cfg.PrivateKey
-
 	nonce := generateUUID()
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 
@@ -579,7 +593,7 @@ func (a *AlipayOpenMiniInnerversionAPIService) signRequest(req *http.Request) er
 		content += appAuthToken + "\n"
 	}
 
-	signature, err := signWithRSA(content, privateKey)
+	signature, err := signWithRSA(content, a.client.cfg.privateKey)
 	if err != nil {
 		return err
 	}
@@ -597,7 +611,5 @@ func (a *AlipayOpenMiniInnerversionAPIService) verifyResponse(resp *http.Respons
 		nonce + "\n" +
 		string(body) + "\n"
 
-	publicKey := a.client.cfg.PublicKey
-
-	return verifyWithRSA(content, sign, publicKey)
+	return verifyWithRSA(content, sign, a.client.cfg.publicKey)
 }

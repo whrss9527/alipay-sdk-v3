@@ -58,6 +58,10 @@ func (r *AlipayOpenPublicPersonalizedMenuAPIService) AlipayOpenPublicPersonalize
 //
 //	@return AlipayOpenPublicPersonalizedMenuCreateResponseModel
 func (a *AlipayOpenPublicPersonalizedMenuAPIService) AlipayOpenPublicPersonalizedMenuCreateExecute(r ApiAlipayOpenPublicPersonalizedMenuCreateRequest) (*AlipayOpenPublicPersonalizedMenuCreateResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -188,6 +192,10 @@ func (r *AlipayOpenPublicPersonalizedMenuAPIService) AlipayOpenPublicPersonalize
 //
 //	@return map[string]interface{}
 func (a *AlipayOpenPublicPersonalizedMenuAPIService) AlipayOpenPublicPersonalizedMenuDeleteExecute(r ApiAlipayOpenPublicPersonalizedMenuDeleteRequest) (map[string]interface{}, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodDelete
 		localVarPostBody    interface{}
@@ -288,8 +296,6 @@ func (a *AlipayOpenPublicPersonalizedMenuAPIService) AlipayOpenPublicPersonalize
 func (a *AlipayOpenPublicPersonalizedMenuAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
-	privateKey := a.client.cfg.PrivateKey
-
 	nonce := generateUUID()
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 
@@ -324,7 +330,7 @@ func (a *AlipayOpenPublicPersonalizedMenuAPIService) signRequest(req *http.Reque
 		content += appAuthToken + "\n"
 	}
 
-	signature, err := signWithRSA(content, privateKey)
+	signature, err := signWithRSA(content, a.client.cfg.privateKey)
 	if err != nil {
 		return err
 	}
@@ -342,7 +348,5 @@ func (a *AlipayOpenPublicPersonalizedMenuAPIService) verifyResponse(resp *http.R
 		nonce + "\n" +
 		string(body) + "\n"
 
-	publicKey := a.client.cfg.PublicKey
-
-	return verifyWithRSA(content, sign, publicKey)
+	return verifyWithRSA(content, sign, a.client.cfg.publicKey)
 }

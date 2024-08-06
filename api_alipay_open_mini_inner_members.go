@@ -58,6 +58,10 @@ func (r *AlipayOpenMiniInnerMembersAPIService) AlipayOpenMiniInnerMembersAdd(ctx
 //
 //	@return map[string]interface{}
 func (a *AlipayOpenMiniInnerMembersAPIService) AlipayOpenMiniInnerMembersAddExecute(r ApiAlipayOpenMiniInnerMembersAddRequest) (map[string]interface{}, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -216,6 +220,10 @@ func (r *AlipayOpenMiniInnerMembersAPIService) AlipayOpenMiniInnerMembersDelete(
 //
 //	@return map[string]interface{}
 func (a *AlipayOpenMiniInnerMembersAPIService) AlipayOpenMiniInnerMembersDeleteExecute(r ApiAlipayOpenMiniInnerMembersDeleteRequest) (map[string]interface{}, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodDelete
 		localVarPostBody    interface{}
@@ -367,6 +375,10 @@ func (r *AlipayOpenMiniInnerMembersAPIService) AlipayOpenMiniInnerMembersQuery(c
 //
 //	@return AlipayOpenMiniInnerMembersQueryResponseModel
 func (a *AlipayOpenMiniInnerMembersAPIService) AlipayOpenMiniInnerMembersQueryExecute(r ApiAlipayOpenMiniInnerMembersQueryRequest) (*AlipayOpenMiniInnerMembersQueryResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -470,8 +482,6 @@ func (a *AlipayOpenMiniInnerMembersAPIService) AlipayOpenMiniInnerMembersQueryEx
 func (a *AlipayOpenMiniInnerMembersAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
-	privateKey := a.client.cfg.PrivateKey
-
 	nonce := generateUUID()
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 
@@ -506,7 +516,7 @@ func (a *AlipayOpenMiniInnerMembersAPIService) signRequest(req *http.Request) er
 		content += appAuthToken + "\n"
 	}
 
-	signature, err := signWithRSA(content, privateKey)
+	signature, err := signWithRSA(content, a.client.cfg.privateKey)
 	if err != nil {
 		return err
 	}
@@ -524,7 +534,5 @@ func (a *AlipayOpenMiniInnerMembersAPIService) verifyResponse(resp *http.Respons
 		nonce + "\n" +
 		string(body) + "\n"
 
-	publicKey := a.client.cfg.PublicKey
-
-	return verifyWithRSA(content, sign, publicKey)
+	return verifyWithRSA(content, sign, a.client.cfg.publicKey)
 }

@@ -52,6 +52,10 @@ func (r *AlipayOpenPublicLifeLabelAPIService) AlipayOpenPublicLifeLabelBatchquer
 //
 //	@return AlipayOpenPublicLifeLabelBatchqueryResponseModel
 func (a *AlipayOpenPublicLifeLabelAPIService) AlipayOpenPublicLifeLabelBatchqueryExecute(r ApiAlipayOpenPublicLifeLabelBatchqueryRequest) (*AlipayOpenPublicLifeLabelBatchqueryResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -179,6 +183,10 @@ func (r *AlipayOpenPublicLifeLabelAPIService) AlipayOpenPublicLifeLabelCreate(ct
 //
 //	@return AlipayOpenPublicLifeLabelCreateResponseModel
 func (a *AlipayOpenPublicLifeLabelAPIService) AlipayOpenPublicLifeLabelCreateExecute(r ApiAlipayOpenPublicLifeLabelCreateRequest) (*AlipayOpenPublicLifeLabelCreateResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -309,6 +317,10 @@ func (r *AlipayOpenPublicLifeLabelAPIService) AlipayOpenPublicLifeLabelDelete(ct
 //
 //	@return map[string]interface{}
 func (a *AlipayOpenPublicLifeLabelAPIService) AlipayOpenPublicLifeLabelDeleteExecute(r ApiAlipayOpenPublicLifeLabelDeleteRequest) (map[string]interface{}, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodDelete
 		localVarPostBody    interface{}
@@ -440,6 +452,10 @@ func (r *AlipayOpenPublicLifeLabelAPIService) AlipayOpenPublicLifeLabelModify(ct
 //
 //	@return map[string]interface{}
 func (a *AlipayOpenPublicLifeLabelAPIService) AlipayOpenPublicLifeLabelModifyExecute(r ApiAlipayOpenPublicLifeLabelModifyRequest) (map[string]interface{}, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -538,8 +554,6 @@ func (a *AlipayOpenPublicLifeLabelAPIService) AlipayOpenPublicLifeLabelModifyExe
 func (a *AlipayOpenPublicLifeLabelAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
-	privateKey := a.client.cfg.PrivateKey
-
 	nonce := generateUUID()
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 
@@ -574,7 +588,7 @@ func (a *AlipayOpenPublicLifeLabelAPIService) signRequest(req *http.Request) err
 		content += appAuthToken + "\n"
 	}
 
-	signature, err := signWithRSA(content, privateKey)
+	signature, err := signWithRSA(content, a.client.cfg.privateKey)
 	if err != nil {
 		return err
 	}
@@ -592,7 +606,5 @@ func (a *AlipayOpenPublicLifeLabelAPIService) verifyResponse(resp *http.Response
 		nonce + "\n" +
 		string(body) + "\n"
 
-	publicKey := a.client.cfg.PublicKey
-
-	return verifyWithRSA(content, sign, publicKey)
+	return verifyWithRSA(content, sign, a.client.cfg.publicKey)
 }

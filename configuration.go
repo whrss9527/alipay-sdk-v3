@@ -12,6 +12,7 @@ package alipay
 
 import (
 	"context"
+	"crypto/rsa"
 	"fmt"
 	"net/http"
 	"strings"
@@ -84,6 +85,8 @@ type Configuration struct {
 	AppCertSN        string
 	PrivateKey       string
 	PublicKey        string
+	privateKey       *rsa.PrivateKey
+	publicKey        *rsa.PublicKey
 }
 
 // NewConfiguration returns a new Configuration object

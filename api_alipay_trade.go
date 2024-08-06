@@ -59,6 +59,10 @@ func (r *AlipayTradeAPIService) AlipayTradeCancel(ctx context.Context) ApiAlipay
 //
 //	@return AlipayTradeCancelResponseModel
 func (a *AlipayTradeAPIService) AlipayTradeCancelExecute(r ApiAlipayTradeCancelRequest) (*AlipayTradeCancelResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -188,6 +192,10 @@ func (r *AlipayTradeAPIService) AlipayTradeClose(ctx context.Context) ApiAlipayT
 //
 //	@return AlipayTradeCloseResponseModel
 func (a *AlipayTradeAPIService) AlipayTradeCloseExecute(r ApiAlipayTradeCloseRequest) (*AlipayTradeCloseResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -317,6 +325,10 @@ func (r *AlipayTradeAPIService) AlipayTradeCreate(ctx context.Context) ApiAlipay
 //
 //	@return AlipayTradeCreateResponseModel
 func (a *AlipayTradeAPIService) AlipayTradeCreateExecute(r ApiAlipayTradeCreateRequest) (*AlipayTradeCreateResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -446,6 +458,10 @@ func (r *AlipayTradeAPIService) AlipayTradePay(ctx context.Context) ApiAlipayTra
 //
 //	@return AlipayTradePayResponseModel
 func (a *AlipayTradeAPIService) AlipayTradePayExecute(r ApiAlipayTradePayRequest) (*AlipayTradePayResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -575,6 +591,10 @@ func (r *AlipayTradeAPIService) AlipayTradePrecreate(ctx context.Context) ApiAli
 //
 //	@return AlipayTradePrecreateResponseModel
 func (a *AlipayTradeAPIService) AlipayTradePrecreateExecute(r ApiAlipayTradePrecreateRequest) (*AlipayTradePrecreateResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -709,6 +729,10 @@ func (r *AlipayTradeAPIService) AlipayTradeQuery(ctx context.Context) ApiAlipayT
 //
 //	@return AlipayTradeQueryResponseModel
 func (a *AlipayTradeAPIService) AlipayTradeQueryExecute(r ApiAlipayTradeQueryRequest) (*AlipayTradeQueryResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -841,6 +865,10 @@ func (r *AlipayTradeAPIService) AlipayTradeRefund(ctx context.Context) ApiAlipay
 //
 //	@return AlipayTradeRefundResponseModel
 func (a *AlipayTradeAPIService) AlipayTradeRefundExecute(r ApiAlipayTradeRefundRequest) (*AlipayTradeRefundResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -939,8 +967,6 @@ func (a *AlipayTradeAPIService) AlipayTradeRefundExecute(r ApiAlipayTradeRefundR
 func (a *AlipayTradeAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
-	privateKey := a.client.cfg.PrivateKey
-
 	nonce := generateUUID()
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 
@@ -975,7 +1001,7 @@ func (a *AlipayTradeAPIService) signRequest(req *http.Request) error {
 		content += appAuthToken + "\n"
 	}
 
-	signature, err := signWithRSA(content, privateKey)
+	signature, err := signWithRSA(content, a.client.cfg.privateKey)
 	if err != nil {
 		return err
 	}
@@ -993,7 +1019,5 @@ func (a *AlipayTradeAPIService) verifyResponse(resp *http.Response, body []byte)
 		nonce + "\n" +
 		string(body) + "\n"
 
-	publicKey := a.client.cfg.PublicKey
-
-	return verifyWithRSA(content, sign, publicKey)
+	return verifyWithRSA(content, sign, a.client.cfg.publicKey)
 }

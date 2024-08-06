@@ -58,6 +58,10 @@ func (r *AlipayMerchantIndirectAuthorderAPIService) AlipayMerchantIndirectAuthor
 //
 //	@return map[string]interface{}
 func (a *AlipayMerchantIndirectAuthorderAPIService) AlipayMerchantIndirectAuthorderCloseExecute(r ApiAlipayMerchantIndirectAuthorderCloseRequest) (map[string]interface{}, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPut
 		localVarPostBody    interface{}
@@ -187,6 +191,10 @@ func (r *AlipayMerchantIndirectAuthorderAPIService) AlipayMerchantIndirectAuthor
 //
 //	@return AlipayMerchantIndirectAuthorderCreateResponseModel
 func (a *AlipayMerchantIndirectAuthorderAPIService) AlipayMerchantIndirectAuthorderCreateExecute(r ApiAlipayMerchantIndirectAuthorderCreateRequest) (*AlipayMerchantIndirectAuthorderCreateResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -316,6 +324,10 @@ func (r *AlipayMerchantIndirectAuthorderAPIService) AlipayMerchantIndirectAuthor
 //
 //	@return AlipayMerchantIndirectAuthorderQuerystatusResponseModel
 func (a *AlipayMerchantIndirectAuthorderAPIService) AlipayMerchantIndirectAuthorderQuerystatusExecute(r ApiAlipayMerchantIndirectAuthorderQuerystatusRequest) (*AlipayMerchantIndirectAuthorderQuerystatusResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -414,8 +426,6 @@ func (a *AlipayMerchantIndirectAuthorderAPIService) AlipayMerchantIndirectAuthor
 func (a *AlipayMerchantIndirectAuthorderAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
-	privateKey := a.client.cfg.PrivateKey
-
 	nonce := generateUUID()
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 
@@ -450,7 +460,7 @@ func (a *AlipayMerchantIndirectAuthorderAPIService) signRequest(req *http.Reques
 		content += appAuthToken + "\n"
 	}
 
-	signature, err := signWithRSA(content, privateKey)
+	signature, err := signWithRSA(content, a.client.cfg.privateKey)
 	if err != nil {
 		return err
 	}
@@ -468,7 +478,5 @@ func (a *AlipayMerchantIndirectAuthorderAPIService) verifyResponse(resp *http.Re
 		nonce + "\n" +
 		string(body) + "\n"
 
-	publicKey := a.client.cfg.PublicKey
-
-	return verifyWithRSA(content, sign, publicKey)
+	return verifyWithRSA(content, sign, a.client.cfg.publicKey)
 }

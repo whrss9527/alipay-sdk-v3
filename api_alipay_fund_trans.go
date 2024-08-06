@@ -58,6 +58,10 @@ func (r *AlipayFundTransAPIService) AlipayFundTransPay(ctx context.Context) ApiA
 //
 //	@return AlipayFundTransPayResponseModel
 func (a *AlipayFundTransAPIService) AlipayFundTransPayExecute(r ApiAlipayFundTransPayRequest) (*AlipayFundTransPayResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -188,6 +192,10 @@ func (r *AlipayFundTransAPIService) AlipayFundTransRefund(ctx context.Context) A
 //
 //	@return AlipayFundTransRefundResponseModel
 func (a *AlipayFundTransAPIService) AlipayFundTransRefundExecute(r ApiAlipayFundTransRefundRequest) (*AlipayFundTransRefundResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -286,8 +294,6 @@ func (a *AlipayFundTransAPIService) AlipayFundTransRefundExecute(r ApiAlipayFund
 func (a *AlipayFundTransAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
-	privateKey := a.client.cfg.PrivateKey
-
 	nonce := generateUUID()
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 
@@ -322,7 +328,7 @@ func (a *AlipayFundTransAPIService) signRequest(req *http.Request) error {
 		content += appAuthToken + "\n"
 	}
 
-	signature, err := signWithRSA(content, privateKey)
+	signature, err := signWithRSA(content, a.client.cfg.privateKey)
 	if err != nil {
 		return err
 	}
@@ -340,7 +346,5 @@ func (a *AlipayFundTransAPIService) verifyResponse(resp *http.Response, body []b
 		nonce + "\n" +
 		string(body) + "\n"
 
-	publicKey := a.client.cfg.PublicKey
-
-	return verifyWithRSA(content, sign, publicKey)
+	return verifyWithRSA(content, sign, a.client.cfg.publicKey)
 }

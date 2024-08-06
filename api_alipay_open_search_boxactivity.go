@@ -58,6 +58,10 @@ func (r *AlipayOpenSearchBoxactivityAPIService) AlipayOpenSearchBoxactivityApply
 //
 //	@return AlipayOpenSearchBoxactivityApplyResponseModel
 func (a *AlipayOpenSearchBoxactivityAPIService) AlipayOpenSearchBoxactivityApplyExecute(r ApiAlipayOpenSearchBoxactivityApplyRequest) (*AlipayOpenSearchBoxactivityApplyResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -187,6 +191,10 @@ func (r *AlipayOpenSearchBoxactivityAPIService) AlipayOpenSearchBoxactivityBatch
 //
 //	@return AlipayOpenSearchBoxactivityBatchqueryResponseModel
 func (a *AlipayOpenSearchBoxactivityAPIService) AlipayOpenSearchBoxactivityBatchqueryExecute(r ApiAlipayOpenSearchBoxactivityBatchqueryRequest) (*AlipayOpenSearchBoxactivityBatchqueryResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -316,6 +324,10 @@ func (r *AlipayOpenSearchBoxactivityAPIService) AlipayOpenSearchBoxactivityModif
 //
 //	@return map[string]interface{}
 func (a *AlipayOpenSearchBoxactivityAPIService) AlipayOpenSearchBoxactivityModifyExecute(r ApiAlipayOpenSearchBoxactivityModifyRequest) (map[string]interface{}, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -445,6 +457,10 @@ func (r *AlipayOpenSearchBoxactivityAPIService) AlipayOpenSearchBoxactivityOffli
 //
 //	@return map[string]interface{}
 func (a *AlipayOpenSearchBoxactivityAPIService) AlipayOpenSearchBoxactivityOfflineExecute(r ApiAlipayOpenSearchBoxactivityOfflineRequest) (map[string]interface{}, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -582,6 +598,10 @@ func (r *AlipayOpenSearchBoxactivityAPIService) AlipayOpenSearchBoxactivityQuery
 //
 //	@return AlipayOpenSearchBoxactivityQueryResponseModel
 func (a *AlipayOpenSearchBoxactivityAPIService) AlipayOpenSearchBoxactivityQueryExecute(r ApiAlipayOpenSearchBoxactivityQueryRequest) (*AlipayOpenSearchBoxactivityQueryResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -685,8 +705,6 @@ func (a *AlipayOpenSearchBoxactivityAPIService) AlipayOpenSearchBoxactivityQuery
 func (a *AlipayOpenSearchBoxactivityAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
-	privateKey := a.client.cfg.PrivateKey
-
 	nonce := generateUUID()
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 
@@ -721,7 +739,7 @@ func (a *AlipayOpenSearchBoxactivityAPIService) signRequest(req *http.Request) e
 		content += appAuthToken + "\n"
 	}
 
-	signature, err := signWithRSA(content, privateKey)
+	signature, err := signWithRSA(content, a.client.cfg.privateKey)
 	if err != nil {
 		return err
 	}
@@ -739,7 +757,5 @@ func (a *AlipayOpenSearchBoxactivityAPIService) verifyResponse(resp *http.Respon
 		nonce + "\n" +
 		string(body) + "\n"
 
-	publicKey := a.client.cfg.PublicKey
-
-	return verifyWithRSA(content, sign, publicKey)
+	return verifyWithRSA(content, sign, a.client.cfg.publicKey)
 }

@@ -59,6 +59,10 @@ func (r *AlipayMarketingActivityDeliveryAPIService) AlipayMarketingActivityDeliv
 //
 //	@return AlipayMarketingActivityDeliveryCreateResponseModel
 func (a *AlipayMarketingActivityDeliveryAPIService) AlipayMarketingActivityDeliveryCreateExecute(r ApiAlipayMarketingActivityDeliveryCreateRequest) (*AlipayMarketingActivityDeliveryCreateResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -191,6 +195,10 @@ func (r *AlipayMarketingActivityDeliveryAPIService) AlipayMarketingActivityDeliv
 //
 //	@return AlipayMarketingActivityDeliveryQueryResponseModel
 func (a *AlipayMarketingActivityDeliveryAPIService) AlipayMarketingActivityDeliveryQueryExecute(r ApiAlipayMarketingActivityDeliveryQueryRequest) (*AlipayMarketingActivityDeliveryQueryResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -325,6 +333,10 @@ func (r *AlipayMarketingActivityDeliveryAPIService) AlipayMarketingActivityDeliv
 //
 //	@return AlipayMarketingActivityDeliveryStopResponseModel
 func (a *AlipayMarketingActivityDeliveryAPIService) AlipayMarketingActivityDeliveryStopExecute(r ApiAlipayMarketingActivityDeliveryStopRequest) (*AlipayMarketingActivityDeliveryStopResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPatch
 		localVarPostBody    interface{}
@@ -424,8 +436,6 @@ func (a *AlipayMarketingActivityDeliveryAPIService) AlipayMarketingActivityDeliv
 func (a *AlipayMarketingActivityDeliveryAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
-	privateKey := a.client.cfg.PrivateKey
-
 	nonce := generateUUID()
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 
@@ -460,7 +470,7 @@ func (a *AlipayMarketingActivityDeliveryAPIService) signRequest(req *http.Reques
 		content += appAuthToken + "\n"
 	}
 
-	signature, err := signWithRSA(content, privateKey)
+	signature, err := signWithRSA(content, a.client.cfg.privateKey)
 	if err != nil {
 		return err
 	}
@@ -478,7 +488,5 @@ func (a *AlipayMarketingActivityDeliveryAPIService) verifyResponse(resp *http.Re
 		nonce + "\n" +
 		string(body) + "\n"
 
-	publicKey := a.client.cfg.PublicKey
-
-	return verifyWithRSA(content, sign, publicKey)
+	return verifyWithRSA(content, sign, a.client.cfg.publicKey)
 }

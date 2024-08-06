@@ -87,6 +87,10 @@ func (r *AlipayMarketingCardAPIService) AlipayMarketingCardDelete(ctx context.Co
 //
 //	@return AlipayMarketingCardDeleteResponseModel
 func (a *AlipayMarketingCardAPIService) AlipayMarketingCardDeleteExecute(r ApiAlipayMarketingCardDeleteRequest) (*AlipayMarketingCardDeleteResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodDelete
 		localVarPostBody    interface{}
@@ -237,6 +241,10 @@ func (r *AlipayMarketingCardAPIService) AlipayMarketingCardOpen(ctx context.Cont
 //
 //	@return AlipayMarketingCardOpenResponseModel
 func (a *AlipayMarketingCardAPIService) AlipayMarketingCardOpenExecute(r ApiAlipayMarketingCardOpenRequest) (*AlipayMarketingCardOpenResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -370,6 +378,10 @@ func (r *AlipayMarketingCardAPIService) AlipayMarketingCardQuery(ctx context.Con
 //
 //	@return AlipayMarketingCardQueryResponseModel
 func (a *AlipayMarketingCardAPIService) AlipayMarketingCardQueryExecute(r ApiAlipayMarketingCardQueryRequest) (*AlipayMarketingCardQueryResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -499,6 +511,10 @@ func (r *AlipayMarketingCardAPIService) AlipayMarketingCardUpdate(ctx context.Co
 //
 //	@return AlipayMarketingCardUpdateResponseModel
 func (a *AlipayMarketingCardAPIService) AlipayMarketingCardUpdateExecute(r ApiAlipayMarketingCardUpdateRequest) (*AlipayMarketingCardUpdateResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -597,8 +613,6 @@ func (a *AlipayMarketingCardAPIService) AlipayMarketingCardUpdateExecute(r ApiAl
 func (a *AlipayMarketingCardAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
-	privateKey := a.client.cfg.PrivateKey
-
 	nonce := generateUUID()
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 
@@ -633,7 +647,7 @@ func (a *AlipayMarketingCardAPIService) signRequest(req *http.Request) error {
 		content += appAuthToken + "\n"
 	}
 
-	signature, err := signWithRSA(content, privateKey)
+	signature, err := signWithRSA(content, a.client.cfg.privateKey)
 	if err != nil {
 		return err
 	}
@@ -651,7 +665,5 @@ func (a *AlipayMarketingCardAPIService) verifyResponse(resp *http.Response, body
 		nonce + "\n" +
 		string(body) + "\n"
 
-	publicKey := a.client.cfg.PublicKey
-
-	return verifyWithRSA(content, sign, publicKey)
+	return verifyWithRSA(content, sign, a.client.cfg.publicKey)
 }

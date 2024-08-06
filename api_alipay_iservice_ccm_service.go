@@ -58,6 +58,10 @@ func (r *AlipayIserviceCcmServiceAPIService) AlipayIserviceCcmServiceBuy(ctx con
 //
 //	@return AlipayIserviceCcmServiceBuyResponseModel
 func (a *AlipayIserviceCcmServiceAPIService) AlipayIserviceCcmServiceBuyExecute(r ApiAlipayIserviceCcmServiceBuyRequest) (*AlipayIserviceCcmServiceBuyResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -187,6 +191,10 @@ func (r *AlipayIserviceCcmServiceAPIService) AlipayIserviceCcmServiceClose(ctx c
 //
 //	@return map[string]interface{}
 func (a *AlipayIserviceCcmServiceAPIService) AlipayIserviceCcmServiceCloseExecute(r ApiAlipayIserviceCcmServiceCloseRequest) (map[string]interface{}, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -316,6 +324,10 @@ func (r *AlipayIserviceCcmServiceAPIService) AlipayIserviceCcmServiceInitialize(
 //
 //	@return AlipayIserviceCcmServiceInitializeResponseModel
 func (a *AlipayIserviceCcmServiceAPIService) AlipayIserviceCcmServiceInitializeExecute(r ApiAlipayIserviceCcmServiceInitializeRequest) (*AlipayIserviceCcmServiceInitializeResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -414,8 +426,6 @@ func (a *AlipayIserviceCcmServiceAPIService) AlipayIserviceCcmServiceInitializeE
 func (a *AlipayIserviceCcmServiceAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
-	privateKey := a.client.cfg.PrivateKey
-
 	nonce := generateUUID()
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 
@@ -450,7 +460,7 @@ func (a *AlipayIserviceCcmServiceAPIService) signRequest(req *http.Request) erro
 		content += appAuthToken + "\n"
 	}
 
-	signature, err := signWithRSA(content, privateKey)
+	signature, err := signWithRSA(content, a.client.cfg.privateKey)
 	if err != nil {
 		return err
 	}
@@ -468,7 +478,5 @@ func (a *AlipayIserviceCcmServiceAPIService) verifyResponse(resp *http.Response,
 		nonce + "\n" +
 		string(body) + "\n"
 
-	publicKey := a.client.cfg.PublicKey
-
-	return verifyWithRSA(content, sign, publicKey)
+	return verifyWithRSA(content, sign, a.client.cfg.publicKey)
 }

@@ -17,45 +17,39 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"os"
 	"strconv"
 	"time"
 )
 
-// AlipayMerchantImageAPIService AlipayMerchantImageAPI service
-type AlipayMerchantImageAPIService service
+// AlipayCommerceCityfacilitatorStationAPIService AlipayCommerceCityfacilitatorStationAPI service
+type AlipayCommerceCityfacilitatorStationAPIService service
 
-type ApiAlipayMerchantImageUploadRequest struct {
-	ctx          context.Context
-	ApiService   *AlipayMerchantImageAPIService
-	data         *AlipayMerchantImageUploadModel
-	imageContent *os.File
+type ApiAlipayCommerceCityfacilitatorStationQueryRequest struct {
+	ctx        context.Context
+	ApiService *AlipayCommerceCityfacilitatorStationAPIService
+	cityCode   *string
 }
 
-func (r ApiAlipayMerchantImageUploadRequest) Data(data AlipayMerchantImageUploadModel) ApiAlipayMerchantImageUploadRequest {
-	r.data = &data
+// 城市编码请参考查询 &lt;a href&#x3D;\&quot;http://www.mca.gov.cn/article/sj/xzqh/\&quot;&gt;中华人民共和国行政区划代码&lt;/a&gt;。 已支持城市：广州 440100，深圳 440300，杭州330100。
+func (r ApiAlipayCommerceCityfacilitatorStationQueryRequest) CityCode(cityCode string) ApiAlipayCommerceCityfacilitatorStationQueryRequest {
+	r.cityCode = &cityCode
 	return r
 }
 
-func (r ApiAlipayMerchantImageUploadRequest) ImageContent(imageContent *os.File) ApiAlipayMerchantImageUploadRequest {
-	r.imageContent = imageContent
-	return r
-}
-
-func (r ApiAlipayMerchantImageUploadRequest) Execute() (*AlipayMerchantImageUploadResponseModel, *http.Response, error) {
-	return r.ApiService.AlipayMerchantImageUploadExecute(r)
+func (r ApiAlipayCommerceCityfacilitatorStationQueryRequest) Execute() (*AlipayCommerceCityfacilitatorStationQueryResponseModel, *http.Response, error) {
+	return r.ApiService.AlipayCommerceCityfacilitatorStationQueryExecute(r)
 }
 
 /*
-AlipayMerchantImageUpload 商户上传处理图片
+AlipayCommerceCityfacilitatorStationQuery 地铁购票站点数据查询
 
-商户上传投诉处理、服务咨询的图片接口
+商户App获取地铁购票开放购票的站点和禁止到达的站点
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiAlipayMerchantImageUploadRequest
+	@return ApiAlipayCommerceCityfacilitatorStationQueryRequest
 */
-func (r *AlipayMerchantImageAPIService) AlipayMerchantImageUpload(ctx context.Context) ApiAlipayMerchantImageUploadRequest {
-	return ApiAlipayMerchantImageUploadRequest{
+func (r *AlipayCommerceCityfacilitatorStationAPIService) AlipayCommerceCityfacilitatorStationQuery(ctx context.Context) ApiAlipayCommerceCityfacilitatorStationQueryRequest {
+	return ApiAlipayCommerceCityfacilitatorStationQueryRequest{
 		ApiService: r,
 		ctx:        ctx,
 	}
@@ -63,32 +57,36 @@ func (r *AlipayMerchantImageAPIService) AlipayMerchantImageUpload(ctx context.Co
 
 // Execute executes the request
 //
-//	@return AlipayMerchantImageUploadResponseModel
-func (a *AlipayMerchantImageAPIService) AlipayMerchantImageUploadExecute(r ApiAlipayMerchantImageUploadRequest) (*AlipayMerchantImageUploadResponseModel, *http.Response, error) {
+//	@return AlipayCommerceCityfacilitatorStationQueryResponseModel
+func (a *AlipayCommerceCityfacilitatorStationAPIService) AlipayCommerceCityfacilitatorStationQueryExecute(r ApiAlipayCommerceCityfacilitatorStationQueryRequest) (*AlipayCommerceCityfacilitatorStationQueryResponseModel, *http.Response, error) {
 	err := a.client.prepareConfig()
 	if err != nil {
 		return nil, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 	var (
-		localVarHTTPMethod  = http.MethodPost
+		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue *AlipayMerchantImageUploadResponseModel
+		localVarReturnValue *AlipayCommerceCityfacilitatorStationQueryResponseModel
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AlipayMerchantImageAPIService.AlipayMerchantImageUpload")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AlipayCommerceCityfacilitatorStationAPIService.AlipayCommerceCityfacilitatorStationQuery")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/v3/alipay/merchant/image/upload"
+	localVarPath := localBasePath + "/v3/alipay/commerce/cityfacilitator/station/query"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 
+	if r.cityCode != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "city_code", r.cityCode, "form", "")
+	}
+
 	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{"multipart/form-data"}
+	localVarHTTPContentTypes := []string{}
 
 	// set Content-Type header
 	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
@@ -103,28 +101,6 @@ func (a *AlipayMerchantImageAPIService) AlipayMerchantImageUploadExecute(r ApiAl
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	if r.data != nil {
-		paramJson, err := parameterToJson(*r.data)
-		if err != nil {
-			return localVarReturnValue, nil, err
-		}
-		localVarFormParams.Add("data", paramJson)
-	}
-	var imageContentLocalVarFormFileName string
-	var imageContentLocalVarFileName string
-	var imageContentLocalVarFileBytes []byte
-
-	imageContentLocalVarFormFileName = "image_content"
-	imageContentLocalVarFile := r.imageContent
-
-	if imageContentLocalVarFile != nil {
-		fbs, _ := io.ReadAll(imageContentLocalVarFile)
-
-		imageContentLocalVarFileBytes = fbs
-		imageContentLocalVarFileName = imageContentLocalVarFile.Name()
-		imageContentLocalVarFile.Close()
-		formFiles = append(formFiles, formFile{fileBytes: imageContentLocalVarFileBytes, fileName: imageContentLocalVarFileName, formFileName: imageContentLocalVarFormFileName})
 	}
 
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -161,7 +137,7 @@ func (a *AlipayMerchantImageAPIService) AlipayMerchantImageUploadExecute(r ApiAl
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		var v AlipayMerchantImageUploadDefaultResponse
+		var v AlipayCommerceCityfacilitatorStationQueryDefaultResponse
 		err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 		if err != nil {
 			newErr.error = err.Error()
@@ -184,7 +160,7 @@ func (a *AlipayMerchantImageAPIService) AlipayMerchantImageUploadExecute(r ApiAl
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-func (a *AlipayMerchantImageAPIService) signRequest(req *http.Request) error {
+func (a *AlipayCommerceCityfacilitatorStationAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
 	nonce := generateUUID()
@@ -230,7 +206,7 @@ func (a *AlipayMerchantImageAPIService) signRequest(req *http.Request) error {
 	return nil
 }
 
-func (a *AlipayMerchantImageAPIService) verifyResponse(resp *http.Response, body []byte) error {
+func (a *AlipayCommerceCityfacilitatorStationAPIService) verifyResponse(resp *http.Response, body []byte) error {
 	timestamp := resp.Header.Get("alipay-timestamp")
 	nonce := resp.Header.Get("alipay-nonce")
 	sign := resp.Header.Get("alipay-signature")

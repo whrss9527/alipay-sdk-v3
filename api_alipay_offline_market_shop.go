@@ -58,6 +58,10 @@ func (r *AlipayOfflineMarketShopAPIService) AlipayOfflineMarketShopBatchquery(ct
 //
 //	@return AlipayOfflineMarketShopBatchqueryResponseModel
 func (a *AlipayOfflineMarketShopAPIService) AlipayOfflineMarketShopBatchqueryExecute(r ApiAlipayOfflineMarketShopBatchqueryRequest) (*AlipayOfflineMarketShopBatchqueryResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -187,6 +191,10 @@ func (r *AlipayOfflineMarketShopAPIService) AlipayOfflineMarketShopCreate(ctx co
 //
 //	@return AlipayOfflineMarketShopCreateResponseModel
 func (a *AlipayOfflineMarketShopAPIService) AlipayOfflineMarketShopCreateExecute(r ApiAlipayOfflineMarketShopCreateRequest) (*AlipayOfflineMarketShopCreateResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -316,6 +324,10 @@ func (r *AlipayOfflineMarketShopAPIService) AlipayOfflineMarketShopModify(ctx co
 //
 //	@return AlipayOfflineMarketShopModifyResponseModel
 func (a *AlipayOfflineMarketShopAPIService) AlipayOfflineMarketShopModifyExecute(r ApiAlipayOfflineMarketShopModifyRequest) (*AlipayOfflineMarketShopModifyResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -453,6 +465,10 @@ func (r *AlipayOfflineMarketShopAPIService) AlipayOfflineMarketShopQuerydetail(c
 //
 //	@return AlipayOfflineMarketShopQuerydetailResponseModel
 func (a *AlipayOfflineMarketShopAPIService) AlipayOfflineMarketShopQuerydetailExecute(r ApiAlipayOfflineMarketShopQuerydetailRequest) (*AlipayOfflineMarketShopQuerydetailResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -556,8 +572,6 @@ func (a *AlipayOfflineMarketShopAPIService) AlipayOfflineMarketShopQuerydetailEx
 func (a *AlipayOfflineMarketShopAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
-	privateKey := a.client.cfg.PrivateKey
-
 	nonce := generateUUID()
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 
@@ -592,7 +606,7 @@ func (a *AlipayOfflineMarketShopAPIService) signRequest(req *http.Request) error
 		content += appAuthToken + "\n"
 	}
 
-	signature, err := signWithRSA(content, privateKey)
+	signature, err := signWithRSA(content, a.client.cfg.privateKey)
 	if err != nil {
 		return err
 	}
@@ -610,7 +624,5 @@ func (a *AlipayOfflineMarketShopAPIService) verifyResponse(resp *http.Response, 
 		nonce + "\n" +
 		string(body) + "\n"
 
-	publicKey := a.client.cfg.PublicKey
-
-	return verifyWithRSA(content, sign, publicKey)
+	return verifyWithRSA(content, sign, a.client.cfg.publicKey)
 }

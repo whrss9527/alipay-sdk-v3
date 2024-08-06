@@ -58,6 +58,10 @@ func (r *AlipayOpenMiniQrcodeAPIService) AlipayOpenMiniQrcodeBind(ctx context.Co
 //
 //	@return AlipayOpenMiniQrcodeBindResponseModel
 func (a *AlipayOpenMiniQrcodeAPIService) AlipayOpenMiniQrcodeBindExecute(r ApiAlipayOpenMiniQrcodeBindRequest) (*AlipayOpenMiniQrcodeBindResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -195,6 +199,10 @@ func (r *AlipayOpenMiniQrcodeAPIService) AlipayOpenMiniQrcodeQuery(ctx context.C
 //
 //	@return AlipayOpenMiniQrcodeQueryResponseModel
 func (a *AlipayOpenMiniQrcodeAPIService) AlipayOpenMiniQrcodeQueryExecute(r ApiAlipayOpenMiniQrcodeQueryRequest) (*AlipayOpenMiniQrcodeQueryResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -329,6 +337,10 @@ func (r *AlipayOpenMiniQrcodeAPIService) AlipayOpenMiniQrcodeUnbind(ctx context.
 //
 //	@return map[string]interface{}
 func (a *AlipayOpenMiniQrcodeAPIService) AlipayOpenMiniQrcodeUnbindExecute(r ApiAlipayOpenMiniQrcodeUnbindRequest) (map[string]interface{}, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -427,8 +439,6 @@ func (a *AlipayOpenMiniQrcodeAPIService) AlipayOpenMiniQrcodeUnbindExecute(r Api
 func (a *AlipayOpenMiniQrcodeAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
-	privateKey := a.client.cfg.PrivateKey
-
 	nonce := generateUUID()
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 
@@ -463,7 +473,7 @@ func (a *AlipayOpenMiniQrcodeAPIService) signRequest(req *http.Request) error {
 		content += appAuthToken + "\n"
 	}
 
-	signature, err := signWithRSA(content, privateKey)
+	signature, err := signWithRSA(content, a.client.cfg.privateKey)
 	if err != nil {
 		return err
 	}
@@ -481,7 +491,5 @@ func (a *AlipayOpenMiniQrcodeAPIService) verifyResponse(resp *http.Response, bod
 		nonce + "\n" +
 		string(body) + "\n"
 
-	publicKey := a.client.cfg.PublicKey
-
-	return verifyWithRSA(content, sign, publicKey)
+	return verifyWithRSA(content, sign, a.client.cfg.publicKey)
 }

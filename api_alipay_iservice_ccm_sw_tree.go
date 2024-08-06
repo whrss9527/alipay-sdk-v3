@@ -59,6 +59,10 @@ func (r *AlipayIserviceCcmSwTreeAPIService) AlipayIserviceCcmSwTreeBatchquery(ct
 //
 //	@return AlipayIserviceCcmSwTreeBatchqueryResponseModel
 func (a *AlipayIserviceCcmSwTreeAPIService) AlipayIserviceCcmSwTreeBatchqueryExecute(r ApiAlipayIserviceCcmSwTreeBatchqueryRequest) (*AlipayIserviceCcmSwTreeBatchqueryResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -190,6 +194,10 @@ func (r *AlipayIserviceCcmSwTreeAPIService) AlipayIserviceCcmSwTreeCreate(ctx co
 //
 //	@return AlipayIserviceCcmSwTreeCreateResponseModel
 func (a *AlipayIserviceCcmSwTreeAPIService) AlipayIserviceCcmSwTreeCreateExecute(r ApiAlipayIserviceCcmSwTreeCreateRequest) (*AlipayIserviceCcmSwTreeCreateResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPut
 		localVarPostBody    interface{}
@@ -313,6 +321,10 @@ func (r *AlipayIserviceCcmSwTreeAPIService) AlipayIserviceCcmSwTreeDelete(ctx co
 //
 //	@return map[string]interface{}
 func (a *AlipayIserviceCcmSwTreeAPIService) AlipayIserviceCcmSwTreeDeleteExecute(r ApiAlipayIserviceCcmSwTreeDeleteRequest) (map[string]interface{}, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodDelete
 		localVarPostBody    interface{}
@@ -448,6 +460,10 @@ func (r *AlipayIserviceCcmSwTreeAPIService) AlipayIserviceCcmSwTreeGet(ctx conte
 //
 //	@return AlipayIserviceCcmSwTreeGetResponseModel
 func (a *AlipayIserviceCcmSwTreeAPIService) AlipayIserviceCcmSwTreeGetExecute(r ApiAlipayIserviceCcmSwTreeGetRequest) (*AlipayIserviceCcmSwTreeGetResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -582,6 +598,10 @@ func (r *AlipayIserviceCcmSwTreeAPIService) AlipayIserviceCcmSwTreeModify(ctx co
 //
 //	@return map[string]interface{}
 func (a *AlipayIserviceCcmSwTreeAPIService) AlipayIserviceCcmSwTreeModifyExecute(r ApiAlipayIserviceCcmSwTreeModifyRequest) (map[string]interface{}, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPatch
 		localVarPostBody    interface{}
@@ -711,6 +731,10 @@ func (r *AlipayIserviceCcmSwTreeAPIService) AlipayIserviceCcmSwTreePublish(ctx c
 //
 //	@return map[string]interface{}
 func (a *AlipayIserviceCcmSwTreeAPIService) AlipayIserviceCcmSwTreePublishExecute(r ApiAlipayIserviceCcmSwTreePublishRequest) (map[string]interface{}, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPut
 		localVarPostBody    interface{}
@@ -809,8 +833,6 @@ func (a *AlipayIserviceCcmSwTreeAPIService) AlipayIserviceCcmSwTreePublishExecut
 func (a *AlipayIserviceCcmSwTreeAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
-	privateKey := a.client.cfg.PrivateKey
-
 	nonce := generateUUID()
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 
@@ -845,7 +867,7 @@ func (a *AlipayIserviceCcmSwTreeAPIService) signRequest(req *http.Request) error
 		content += appAuthToken + "\n"
 	}
 
-	signature, err := signWithRSA(content, privateKey)
+	signature, err := signWithRSA(content, a.client.cfg.privateKey)
 	if err != nil {
 		return err
 	}
@@ -863,7 +885,5 @@ func (a *AlipayIserviceCcmSwTreeAPIService) verifyResponse(resp *http.Response, 
 		nonce + "\n" +
 		string(body) + "\n"
 
-	publicKey := a.client.cfg.PublicKey
-
-	return verifyWithRSA(content, sign, publicKey)
+	return verifyWithRSA(content, sign, a.client.cfg.publicKey)
 }

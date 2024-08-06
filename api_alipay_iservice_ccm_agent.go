@@ -58,6 +58,10 @@ func (r *AlipayIserviceCcmAgentAPIService) AlipayIserviceCcmAgentCreate(ctx cont
 //
 //	@return AlipayIserviceCcmAgentCreateResponseModel
 func (a *AlipayIserviceCcmAgentAPIService) AlipayIserviceCcmAgentCreateExecute(r ApiAlipayIserviceCcmAgentCreateRequest) (*AlipayIserviceCcmAgentCreateResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -188,6 +192,10 @@ func (r *AlipayIserviceCcmAgentAPIService) AlipayIserviceCcmAgentDelete(ctx cont
 //
 //	@return map[string]interface{}
 func (a *AlipayIserviceCcmAgentAPIService) AlipayIserviceCcmAgentDeleteExecute(r ApiAlipayIserviceCcmAgentDeleteRequest) (map[string]interface{}, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodDelete
 		localVarPostBody    interface{}
@@ -341,6 +349,10 @@ func (r *AlipayIserviceCcmAgentAPIService) AlipayIserviceCcmAgentGet(ctx context
 //
 //	@return AlipayIserviceCcmAgentGetResponseModel
 func (a *AlipayIserviceCcmAgentAPIService) AlipayIserviceCcmAgentGetExecute(r ApiAlipayIserviceCcmAgentGetRequest) (*AlipayIserviceCcmAgentGetResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -481,6 +493,10 @@ func (r *AlipayIserviceCcmAgentAPIService) AlipayIserviceCcmAgentModify(ctx cont
 //
 //	@return map[string]interface{}
 func (a *AlipayIserviceCcmAgentAPIService) AlipayIserviceCcmAgentModifyExecute(r ApiAlipayIserviceCcmAgentModifyRequest) (map[string]interface{}, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -610,6 +626,10 @@ func (r *AlipayIserviceCcmAgentAPIService) AlipayIserviceCcmAgentQuery(ctx conte
 //
 //	@return AlipayIserviceCcmAgentQueryResponseModel
 func (a *AlipayIserviceCcmAgentAPIService) AlipayIserviceCcmAgentQueryExecute(r ApiAlipayIserviceCcmAgentQueryRequest) (*AlipayIserviceCcmAgentQueryResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -708,8 +728,6 @@ func (a *AlipayIserviceCcmAgentAPIService) AlipayIserviceCcmAgentQueryExecute(r 
 func (a *AlipayIserviceCcmAgentAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
-	privateKey := a.client.cfg.PrivateKey
-
 	nonce := generateUUID()
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 
@@ -744,7 +762,7 @@ func (a *AlipayIserviceCcmAgentAPIService) signRequest(req *http.Request) error 
 		content += appAuthToken + "\n"
 	}
 
-	signature, err := signWithRSA(content, privateKey)
+	signature, err := signWithRSA(content, a.client.cfg.privateKey)
 	if err != nil {
 		return err
 	}
@@ -762,7 +780,5 @@ func (a *AlipayIserviceCcmAgentAPIService) verifyResponse(resp *http.Response, b
 		nonce + "\n" +
 		string(body) + "\n"
 
-	publicKey := a.client.cfg.PublicKey
-
-	return verifyWithRSA(content, sign, publicKey)
+	return verifyWithRSA(content, sign, a.client.cfg.publicKey)
 }

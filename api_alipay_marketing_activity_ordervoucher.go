@@ -64,6 +64,10 @@ func (r *AlipayMarketingActivityOrdervoucherAPIService) AlipayMarketingActivityO
 //
 //	@return map[string]interface{}
 func (a *AlipayMarketingActivityOrdervoucherAPIService) AlipayMarketingActivityOrdervoucherAppendExecute(r ApiAlipayMarketingActivityOrdervoucherAppendRequest) (map[string]interface{}, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPatch
 		localVarPostBody    interface{}
@@ -194,6 +198,10 @@ func (r *AlipayMarketingActivityOrdervoucherAPIService) AlipayMarketingActivityO
 //
 //	@return AlipayMarketingActivityOrdervoucherAssociateResponseModel
 func (a *AlipayMarketingActivityOrdervoucherAPIService) AlipayMarketingActivityOrdervoucherAssociateExecute(r ApiAlipayMarketingActivityOrdervoucherAssociateRequest) (*AlipayMarketingActivityOrdervoucherAssociateResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -327,6 +335,10 @@ func (r *AlipayMarketingActivityOrdervoucherAPIService) AlipayMarketingActivityO
 //
 //	@return AlipayMarketingActivityOrdervoucherCodecountResponseModel
 func (a *AlipayMarketingActivityOrdervoucherAPIService) AlipayMarketingActivityOrdervoucherCodecountExecute(r ApiAlipayMarketingActivityOrdervoucherCodecountRequest) (*AlipayMarketingActivityOrdervoucherCodecountResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -462,6 +474,10 @@ func (r *AlipayMarketingActivityOrdervoucherAPIService) AlipayMarketingActivityO
 //
 //	@return AlipayMarketingActivityOrdervoucherCodedepositResponseModel
 func (a *AlipayMarketingActivityOrdervoucherAPIService) AlipayMarketingActivityOrdervoucherCodedepositExecute(r ApiAlipayMarketingActivityOrdervoucherCodedepositRequest) (*AlipayMarketingActivityOrdervoucherCodedepositResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -595,6 +611,10 @@ func (r *AlipayMarketingActivityOrdervoucherAPIService) AlipayMarketingActivityO
 //
 //	@return AlipayMarketingActivityOrdervoucherCreateResponseModel
 func (a *AlipayMarketingActivityOrdervoucherAPIService) AlipayMarketingActivityOrdervoucherCreateExecute(r ApiAlipayMarketingActivityOrdervoucherCreateRequest) (*AlipayMarketingActivityOrdervoucherCreateResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -724,6 +744,10 @@ func (r *AlipayMarketingActivityOrdervoucherAPIService) AlipayMarketingActivityO
 //
 //	@return AlipayMarketingActivityOrdervoucherDisassociateResponseModel
 func (a *AlipayMarketingActivityOrdervoucherAPIService) AlipayMarketingActivityOrdervoucherDisassociateExecute(r ApiAlipayMarketingActivityOrdervoucherDisassociateRequest) (*AlipayMarketingActivityOrdervoucherDisassociateResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -857,6 +881,10 @@ func (r *AlipayMarketingActivityOrdervoucherAPIService) AlipayMarketingActivityO
 //
 //	@return AlipayMarketingActivityOrdervoucherModifyResponseModel
 func (a *AlipayMarketingActivityOrdervoucherAPIService) AlipayMarketingActivityOrdervoucherModifyExecute(r ApiAlipayMarketingActivityOrdervoucherModifyRequest) (*AlipayMarketingActivityOrdervoucherModifyResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPatch
 		localVarPostBody    interface{}
@@ -995,6 +1023,10 @@ func (r *AlipayMarketingActivityOrdervoucherAPIService) AlipayMarketingActivityO
 //
 //	@return AlipayMarketingActivityOrdervoucherQueryResponseModel
 func (a *AlipayMarketingActivityOrdervoucherAPIService) AlipayMarketingActivityOrdervoucherQueryExecute(r ApiAlipayMarketingActivityOrdervoucherQueryRequest) (*AlipayMarketingActivityOrdervoucherQueryResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -1137,6 +1169,10 @@ func (r *AlipayMarketingActivityOrdervoucherAPIService) AlipayMarketingActivityO
 //
 //	@return AlipayMarketingActivityOrdervoucherRefundResponseModel
 func (a *AlipayMarketingActivityOrdervoucherAPIService) AlipayMarketingActivityOrdervoucherRefundExecute(r ApiAlipayMarketingActivityOrdervoucherRefundRequest) (*AlipayMarketingActivityOrdervoucherRefundResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -1273,6 +1309,10 @@ func (r *AlipayMarketingActivityOrdervoucherAPIService) AlipayMarketingActivityO
 //
 //	@return map[string]interface{}
 func (a *AlipayMarketingActivityOrdervoucherAPIService) AlipayMarketingActivityOrdervoucherStopExecute(r ApiAlipayMarketingActivityOrdervoucherStopRequest) (map[string]interface{}, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPatch
 		localVarPostBody    interface{}
@@ -1409,6 +1449,10 @@ func (r *AlipayMarketingActivityOrdervoucherAPIService) AlipayMarketingActivityO
 //
 //	@return AlipayMarketingActivityOrdervoucherUseResponseModel
 func (a *AlipayMarketingActivityOrdervoucherAPIService) AlipayMarketingActivityOrdervoucherUseExecute(r ApiAlipayMarketingActivityOrdervoucherUseRequest) (*AlipayMarketingActivityOrdervoucherUseResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -1509,8 +1553,6 @@ func (a *AlipayMarketingActivityOrdervoucherAPIService) AlipayMarketingActivityO
 func (a *AlipayMarketingActivityOrdervoucherAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
-	privateKey := a.client.cfg.PrivateKey
-
 	nonce := generateUUID()
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 
@@ -1545,7 +1587,7 @@ func (a *AlipayMarketingActivityOrdervoucherAPIService) signRequest(req *http.Re
 		content += appAuthToken + "\n"
 	}
 
-	signature, err := signWithRSA(content, privateKey)
+	signature, err := signWithRSA(content, a.client.cfg.privateKey)
 	if err != nil {
 		return err
 	}
@@ -1563,7 +1605,5 @@ func (a *AlipayMarketingActivityOrdervoucherAPIService) verifyResponse(resp *htt
 		nonce + "\n" +
 		string(body) + "\n"
 
-	publicKey := a.client.cfg.PublicKey
-
-	return verifyWithRSA(content, sign, publicKey)
+	return verifyWithRSA(content, sign, a.client.cfg.publicKey)
 }

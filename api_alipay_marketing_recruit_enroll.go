@@ -58,6 +58,10 @@ func (r *AlipayMarketingRecruitEnrollAPIService) AlipayMarketingRecruitEnrollClo
 //
 //	@return map[string]interface{}
 func (a *AlipayMarketingRecruitEnrollAPIService) AlipayMarketingRecruitEnrollCloseExecute(r ApiAlipayMarketingRecruitEnrollCloseRequest) (map[string]interface{}, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -187,6 +191,10 @@ func (r *AlipayMarketingRecruitEnrollAPIService) AlipayMarketingRecruitEnrollCre
 //
 //	@return AlipayMarketingRecruitEnrollCreateResponseModel
 func (a *AlipayMarketingRecruitEnrollAPIService) AlipayMarketingRecruitEnrollCreateExecute(r ApiAlipayMarketingRecruitEnrollCreateRequest) (*AlipayMarketingRecruitEnrollCreateResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -324,6 +332,10 @@ func (r *AlipayMarketingRecruitEnrollAPIService) AlipayMarketingRecruitEnrollQue
 //
 //	@return AlipayMarketingRecruitEnrollQueryResponseModel
 func (a *AlipayMarketingRecruitEnrollAPIService) AlipayMarketingRecruitEnrollQueryExecute(r ApiAlipayMarketingRecruitEnrollQueryRequest) (*AlipayMarketingRecruitEnrollQueryResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -427,8 +439,6 @@ func (a *AlipayMarketingRecruitEnrollAPIService) AlipayMarketingRecruitEnrollQue
 func (a *AlipayMarketingRecruitEnrollAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
-	privateKey := a.client.cfg.PrivateKey
-
 	nonce := generateUUID()
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 
@@ -463,7 +473,7 @@ func (a *AlipayMarketingRecruitEnrollAPIService) signRequest(req *http.Request) 
 		content += appAuthToken + "\n"
 	}
 
-	signature, err := signWithRSA(content, privateKey)
+	signature, err := signWithRSA(content, a.client.cfg.privateKey)
 	if err != nil {
 		return err
 	}
@@ -481,7 +491,5 @@ func (a *AlipayMarketingRecruitEnrollAPIService) verifyResponse(resp *http.Respo
 		nonce + "\n" +
 		string(body) + "\n"
 
-	publicKey := a.client.cfg.PublicKey
-
-	return verifyWithRSA(content, sign, publicKey)
+	return verifyWithRSA(content, sign, a.client.cfg.publicKey)
 }

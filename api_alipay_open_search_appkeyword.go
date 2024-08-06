@@ -58,6 +58,10 @@ func (r *AlipayOpenSearchAppkeywordAPIService) AlipayOpenSearchAppkeywordApply(c
 //
 //	@return AlipayOpenSearchAppkeywordApplyResponseModel
 func (a *AlipayOpenSearchAppkeywordAPIService) AlipayOpenSearchAppkeywordApplyExecute(r ApiAlipayOpenSearchAppkeywordApplyRequest) (*AlipayOpenSearchAppkeywordApplyResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -209,6 +213,10 @@ func (r *AlipayOpenSearchAppkeywordAPIService) AlipayOpenSearchAppkeywordBatchqu
 //
 //	@return AlipayOpenSearchAppkeywordBatchqueryResponseModel
 func (a *AlipayOpenSearchAppkeywordAPIService) AlipayOpenSearchAppkeywordBatchqueryExecute(r ApiAlipayOpenSearchAppkeywordBatchqueryRequest) (*AlipayOpenSearchAppkeywordBatchqueryResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -349,6 +357,10 @@ func (r *AlipayOpenSearchAppkeywordAPIService) AlipayOpenSearchAppkeywordDelete(
 //
 //	@return map[string]interface{}
 func (a *AlipayOpenSearchAppkeywordAPIService) AlipayOpenSearchAppkeywordDeleteExecute(r ApiAlipayOpenSearchAppkeywordDeleteRequest) (map[string]interface{}, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
@@ -486,6 +498,10 @@ func (r *AlipayOpenSearchAppkeywordAPIService) AlipayOpenSearchAppkeywordQueryst
 //
 //	@return AlipayOpenSearchAppkeywordQuerystatusResponseModel
 func (a *AlipayOpenSearchAppkeywordAPIService) AlipayOpenSearchAppkeywordQuerystatusExecute(r ApiAlipayOpenSearchAppkeywordQuerystatusRequest) (*AlipayOpenSearchAppkeywordQuerystatusResponseModel, *http.Response, error) {
+	err := a.client.prepareConfig()
+	if err != nil {
+		return nil, nil, &GenericOpenAPIError{error: err.Error()}
+	}
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
@@ -589,8 +605,6 @@ func (a *AlipayOpenSearchAppkeywordAPIService) AlipayOpenSearchAppkeywordQueryst
 func (a *AlipayOpenSearchAppkeywordAPIService) signRequest(req *http.Request) error {
 	appID := a.client.cfg.AppID
 	appCertSN := a.client.cfg.AppCertSN
-	privateKey := a.client.cfg.PrivateKey
-
 	nonce := generateUUID()
 	timestamp := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 
@@ -625,7 +639,7 @@ func (a *AlipayOpenSearchAppkeywordAPIService) signRequest(req *http.Request) er
 		content += appAuthToken + "\n"
 	}
 
-	signature, err := signWithRSA(content, privateKey)
+	signature, err := signWithRSA(content, a.client.cfg.privateKey)
 	if err != nil {
 		return err
 	}
@@ -643,7 +657,5 @@ func (a *AlipayOpenSearchAppkeywordAPIService) verifyResponse(resp *http.Respons
 		nonce + "\n" +
 		string(body) + "\n"
 
-	publicKey := a.client.cfg.PublicKey
-
-	return verifyWithRSA(content, sign, publicKey)
+	return verifyWithRSA(content, sign, a.client.cfg.publicKey)
 }
