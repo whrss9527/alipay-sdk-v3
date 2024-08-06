@@ -390,7 +390,7 @@ func signWithRSA(content string, priKey *rsa.PrivateKey) (string, error) {
 
 	// Compute SHA256 hash of the content
 	hash := sha256.New()
-	_, err = hash.Write(contentBytes)
+	_, err := hash.Write(contentBytes)
 	if err != nil {
 		return "", fmt.Errorf("failed to write content to hash: %v", err)
 	}
