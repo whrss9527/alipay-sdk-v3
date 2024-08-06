@@ -1,4 +1,4 @@
-module github.com/GIT_USER_ID/GIT_REPO_ID
+module github.com/whrss9527/go-alipay-sdk-v3
 
 go 1.18
 
